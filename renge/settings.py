@@ -25,7 +25,7 @@ SECRET_KEY = 'b&l&n-sjlechcjf(k4g8!gp7e&0p24s(7ib3+ehw_$2dtgbb(t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =['101.200.46.25', ]
+ALLOWED_HOSTS = ['101.200.46.25', ]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'RGPY.apps.RgpyConfig',
 ]
 
 MIDDLEWARE = [
@@ -73,13 +74,30 @@ WSGI_APPLICATION = 'renge.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 数据库引擎
+        'ENGINE': 'django.db.backends.mysql',
+        # 数据库名
+        'NAME': 'renge',
+        # 用户名
+        'USER': 'renge',
+        # 密码
+        'PASSWORD': 'renge',
+        # 安装mysql数据库的主机ip
+        'HOST': '101.200.46.25',
+        'OPTIONS': {
+            'autocommit': True,
+            'init_command': 'SET default_storage_engine=INNODB',
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
