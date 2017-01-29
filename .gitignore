@@ -90,3 +90,5 @@ ENV/
 
 log/
 .ftpconfig
+
+doc/
