@@ -16,7 +16,7 @@ class College(models.Model):
 
 class Department(models.Model):
     department = models.CharField("系别", max_length=50)
-    college = models.ForeignKey(College, verbose_name="所属学院")
+    college = models.ForeignKey(College, verbose_name="所属学院", default=1, blank=True)
 
     class Meta:
         verbose_name = "系别"
@@ -31,7 +31,7 @@ class Banji(models.Model):
     班级的英文 class是python的关键字，防止冲突这里用中文拼音
     """
     banji = models.CharField("班级", max_length=50)
-    department = models.ForeignKey(Department, verbose_name="所属系别")
+    department = models.ForeignKey(Department, verbose_name="所属系别", default=2, blank=True)
 
     class Meta:
         verbose_name = "班级"
@@ -51,16 +51,16 @@ class Student(User):
     password 密码 在我们的系统里直接使用  加密我们采用基于SHA256 的哈希值使用PBKDF2算法，它是NIST推荐的算法
     """
     phone = models.CharField(max_length=11, verbose_name="用户手机", blank=True, null=True)
-    banji = models.ForeignKey(Banji, verbose_name="所属班级")
+    banji = models.ForeignKey(Banji, verbose_name="所属班级", default=1, blank=True)
     is_banji_admin = models.BooleanField(
         default=False,
         help_text='是否是班级管理员.',
     )
     # 这里使用PositiveSmallIntegerField 因为获得时长肯定是正数 并且不会超过32767
-    score = models.PositiveSmallIntegerField("已获时长")
+    score = models.PositiveSmallIntegerField("已获时长", default=0, blank=True)
 
     class Meta:
-        verbose_name = "用户"
+        verbose_name = "学生"
         verbose_name_plural = verbose_name
 
     def __str__(self):
