@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def test(request):
-    return HttpResponse("人格培养管理平台测试页")
+    return render(request, "RGPY/base.html", locals())
 
 
 def register(request):
