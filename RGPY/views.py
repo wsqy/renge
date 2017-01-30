@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from RGPY.models import Student, Banji
-from django.contrib.auth import login, logout, authenticate
+from django.contrib import auth
 
 
 # Create your views here.
@@ -25,11 +25,12 @@ def login(request):
     if request.method == "POST" and request.POST:
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
-        user = authenticate(username=username, password=password)
+        user = auth.authenticate(username=username, password=password)
         if user is not None:
-            print(user)
-            print("登录成功")
-            # login(request, user)
-        else:
-            print(user)
+            auth.login(request, user)
+            return redirect("/")
     return render(request, "RGPY/login.html", locals())
+
+
+def index(reuqest):
+    return HttpResponse("这是首页")
