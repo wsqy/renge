@@ -43,7 +43,7 @@ class Banji(models.Model):
     __repr__ = __str__
 
 
-class Stuent(User):
+class Student(User):
     """
     这里继承django的User类，他已经定义了以下属性username password first_name last_name email is_staff is_active date_joined last_login
     username 在我们的系统里用以代表学号
