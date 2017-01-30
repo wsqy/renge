@@ -15,7 +15,7 @@ class College(models.Model):
 
 
 class Department(models.Model):
-    departmen = models.CharField("系别", max_length=50)
+    department = models.CharField("系别", max_length=50)
     college = models.ForeignKey(College, verbose_name="所属学院")
 
     class Meta:
@@ -30,7 +30,6 @@ class Banji(models.Model):
     """
     班级的英文 class是python的关键字，防止冲突这里用中文拼音
     """
-    phone = models.CharField(max_length=11, verbose_name="用户手机", blank=True, null=True)
     banji = models.CharField("班级", max_length=50)
     department = models.ForeignKey(Department, verbose_name="所属系别")
 
@@ -41,6 +40,8 @@ class Banji(models.Model):
     def __str__(self):
         return self.banji
 
+    __repr__ = __str__
+
 
 class Stuent(User):
     """
@@ -49,6 +50,7 @@ class Stuent(User):
     first_name 在我们的系统里用以代表姓名
     password 密码 在我们的系统里直接使用  加密我们采用基于SHA256 的哈希值使用PBKDF2算法，它是NIST推荐的算法
     """
+    phone = models.CharField(max_length=11, verbose_name="用户手机", blank=True, null=True)
     banji = models.ForeignKey(Banji, verbose_name="所属班级")
     is_banji_admin = models.BooleanField(
         default=False,

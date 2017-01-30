@@ -95,6 +95,7 @@ DATABASES = {
         'OPTIONS': {
             'autocommit': True,
             'init_command': 'SET default_storage_engine=INNODB',
+            "charset": "utf8",
         },
     }
 }
