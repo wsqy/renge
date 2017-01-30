@@ -30,6 +30,7 @@ class Banji(models.Model):
     """
     班级的英文 class是python的关键字，防止冲突这里用中文拼音
     """
+    phone = models.CharField(max_length=11, verbose_name="用户手机", blank=True, null=True)
     banji = models.CharField("班级", max_length=50)
     department = models.ForeignKey(Department, verbose_name="所属系别")
 
