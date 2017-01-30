@@ -32,5 +32,10 @@ def login(request):
     return render(request, "RGPY/login.html", locals())
 
 
+def logout(request):
+    auth.logout(request)
+    return redirect("/")
+
+
 def index(reuqest):
     return HttpResponse("这是首页")
