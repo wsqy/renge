@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from RGPY.models import Student, Banji
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -37,5 +38,6 @@ def logout(request):
     return redirect("/")
 
 
-def index(reuqest):
-    return HttpResponse("这是首页")
+@login_required(login_url='/login/')
+def index(request):
+    return render(request, "RGPY/index.html", locals())
