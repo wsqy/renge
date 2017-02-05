@@ -43,5 +43,15 @@ def index(request):
     return render(request, "RGPY/index.html", locals())
 
 
+@login_required(login_url='/login/')
 def user_info(request):
+    student = {
+        "first_name": request.user.student.get_short_name(),
+        "username": request.user.student.get_username(),
+        "phone": request.user.student.phone,
+        "email": request.user.student.email,
+        "banji": request.user.student.banji,
+        "department": request.user.student.banji.department,
+        "college": request.user.student.banji.department.college,
+    }
     return render(request, "RGPY/StudentInfo.html", locals())

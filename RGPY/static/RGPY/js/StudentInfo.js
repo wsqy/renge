@@ -10,7 +10,7 @@ $(function(){
        //   设置一些学生可修改的属性值
        $('.Student').attr("disabled",false);
        // 显示 默认不显示的项
-       $(".hidden_div").hide();
+       $(".hidden_div").show();
 
       // 隐藏 个人信息修改 按钮
       $(this).hide();
