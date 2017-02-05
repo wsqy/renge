@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from RGPY.models import Student, Banji
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -55,3 +55,17 @@ def user_info(request):
         "college": request.user.student.banji.department.college,
     }
     return render(request, "RGPY/StudentInfo.html", locals())
+
+
+def check_passwd(request):
+    print(request.get_full_path())
+    print(request.GET)
+    username = request.GET.get("username")
+    password = request.GET.get("passwd")
+    user = auth.authenticate(username=username, password=password)
+    print(user)
+    if user is not None:
+        result = 1
+    else:
+        result = 0
+    return HttpResponse(result)
