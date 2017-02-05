@@ -25,6 +25,10 @@
         <input type="password" class="form-control Student" id="id_password" name="password" required="" placeholder="密码" >
       </div>
     </div>
+    <div class="alert alert-warning alert-dismissible alert_dismissible1" role="alert" >
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Warning!</strong> 密码不正确
+    </div>
     <div class="form-group hidden_div">
       <label for="id_password_new" class="col-sm-2 control-label">新密码</label>
       <div class="col-sm-6">
@@ -36,6 +40,10 @@
       <div class="col-sm-6">
         <input type="password" class="form-control Student" id="id_password_new_rep" name="password_new_rep"  placeholder="确认密码">
       </div>
+    </div>
+    <div class="alert alert-warning alert-dismissible alert_dismissible alert_dismissible2" role="alert" >
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Warning!</strong> 密码不正确
     </div>
     <div class="form-group">
       <label for="id_phone" class="col-sm-2 control-label">手机</label>
@@ -72,9 +80,10 @@
           <button type="button" class="btn btn-default" >个人信息修改</button>
         </div>
     </div>
+    <!-- {{stuForm.as_p }} -->
     <div class="form-group submit_userInfo">
         <div class="col-sm-offset-2 col-sm-6">
-          <button type="submit" class="btn btn-default" >提交修改</button>
+          <button type="button" class="btn btn-default" >提交修改</button>
         </div>
     </div>
 </form>

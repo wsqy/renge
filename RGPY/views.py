@@ -54,7 +54,17 @@ def user_info(request):
         "department": request.user.student.banji.department,
         "college": request.user.student.banji.department.college,
     }
-    return render(request, "RGPY/StudentInfo.html", locals())
+    if request.method == "POST" and request.POST:
+        u = Student.objects.get(username=request.user.student.get_username())
+        u.phone = request.POST.get("phone")
+        u.email = request.POST.get("email")
+        new_passwd = request.POST.get("password_new", "")
+        if new_passwd != "":
+            u.set_password(new_passwd)
+        u.save()
+        return HttpResponse("个人信息修改成功")
+    else:
+        return render(request, "RGPY/StudentInfo.html", locals())
 
 
 def check_passwd(request):
