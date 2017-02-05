@@ -41,3 +41,7 @@ def logout(request):
 @login_required(login_url='/login/')
 def index(request):
     return render(request, "RGPY/index.html", locals())
+
+
+def user_info(request):
+    return render(request, "RGPY/StudentInfo.html", locals())
