@@ -27,9 +27,10 @@ def login(request):
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
         user = auth.authenticate(username=username, password=password)
+        next = request.GET.get("next", "/")
         if user is not None:
             auth.login(request, user)
-            return redirect("/")
+            return redirect(next)
     return render(request, "RGPY/login.html", locals())
 
 
@@ -68,12 +69,9 @@ def user_info(request):
 
 
 def check_passwd(request):
-    print(request.get_full_path())
-    print(request.GET)
     username = request.GET.get("username")
     password = request.GET.get("passwd")
     user = auth.authenticate(username=username, password=password)
-    print(user)
     if user is not None:
         result = 1
     else:
