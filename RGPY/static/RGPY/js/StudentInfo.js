@@ -27,9 +27,9 @@ $(function(){
     $("#id_password").blur(function(){
         var passwd=$(this).val();
         var username=$("#id_username").val();
-        console.log(passwd)
+        var host=$("#id_host").val();
         $.ajax({
-            url: "http://101.200.46.25:8000/check_passwd?passwd="+passwd+"&username="+username,
+            url: "http://"+host+"/check_passwd?passwd="+passwd+"&username="+username,
             success: function(result){
                 if(result == 0){
                     flag = false

@@ -54,6 +54,7 @@ def user_info(request):
         "banji": request.user.student.banji,
         "department": request.user.student.banji.department,
         "college": request.user.student.banji.department.college,
+        "host": request.get_host(),
     }
     if request.method == "POST" and request.POST:
         u = Student.objects.get(username=request.user.student.get_username())

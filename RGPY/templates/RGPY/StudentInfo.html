@@ -7,6 +7,7 @@
 {% block body %}
 <form action="" method="post" class="form-horizontal" role="form">
     {% csrf_token %}
+    <input type="hidden" name="host" id="id_host" value="{{student.host}}">
     <div class="form-group">
       <label for="id_first_name" class="col-sm-2 control-label">姓名</label>
       <div class="col-sm-6">
