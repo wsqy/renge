@@ -43,14 +43,43 @@ class Banji(models.Model):
     __repr__ = __str__
 
 
-class Student(User):
+class OurUser(User):
     """
     这里继承django的User类，他已经定义了以下属性username password first_name last_name email is_staff is_active date_joined last_login
     username 在我们的系统里用以代表学号
     first_name 在我们的系统里用以代表姓名
     password 密码 在我们的系统里直接使用  加密我们采用基于SHA256 的哈希值使用PBKDF2算法，它是NIST推荐的算法
     """
+    user_level = (
+        ('1', "学生"),
+        ('2', "系管理员"),
+        ('3', "院管理员"),
+        ('4', "管理员"),
+    )
     phone = models.CharField(max_length=11, verbose_name="用户手机", blank=True, null=True)
+    level = models.CharField(max_length=1, verbose_name="用户级别", choices=user_level, default='1')
+
+    def is_college(self):
+            return self.level in ('3', '4')
+
+    def is_department(self):
+            return self.level in ('2', )
+
+    def is_student(self):
+            return self.level in ('1', )
+
+    def is_django_admin(self):
+            return self.level not in ('1', '2', '3', '4')
+
+    class Meta:
+        verbose_name = "自定义用户"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.username
+
+
+class Student(OurUser):
     banji = models.ForeignKey(Banji, verbose_name="所属班级", default=1, blank=True)
     is_banji_admin = models.BooleanField(
         default=False,
@@ -63,5 +92,23 @@ class Student(User):
         verbose_name = "学生"
         verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.username
+
+class DepartmentManage(OurUser):
+    department = models.ForeignKey(Department, verbose_name="管理的系别", default=2, blank=True)
+    banji = models.ForeignKey(Banji, verbose_name="管理班级", null=True, blank=True)
+
+    class Meta:
+        verbose_name = "系管理员"
+        verbose_name_plural = verbose_name
+
+
+class CollegeManage(OurUser):
+    class Meta:
+        verbose_name = "院管理员"
+        verbose_name_plural = verbose_name
+
+
+class Manage(OurUser):
+    class Meta:
+        verbose_name = "管理员"
+        verbose_name_plural = verbose_name
