@@ -59,14 +59,17 @@ class OurUser(User):
     phone = models.CharField(max_length=11, verbose_name="用户手机", blank=True, null=True)
     level = models.CharField(max_length=1, verbose_name="用户级别", choices=user_level, default='1')
 
+    def is_manage(self):
+            return self.level == 4
+
     def is_college(self):
-            return self.level in ('3', '4')
+            return self.level == 3
 
     def is_department(self):
-            return self.level in ('2', )
+            return self.level == 2
 
     def is_student(self):
-            return self.level in ('1', )
+            return self.level == 1
 
     def is_django_admin(self):
             return self.level not in ('1', '2', '3', '4')

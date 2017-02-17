@@ -2,7 +2,7 @@
 {% block left %}
   <ul class="nav" id="side-menu1">
     <li>
-        <a href="{%url 'RGPY:user_info'%}"><i class="fa fa-user fa-fw"></i> 学生:&nbsp;{{ request.user.student.get_short_name }}<span class="fa arrow"></span></a>
+        <a href="{%url 'RGPY:user_info'%}"><i class="fa fa-user fa-fw"></i> 学生:&nbsp;{{ request.user.ouruser.student.get_short_name }}<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li>
                 <a href="morris.html ">最新消息</a>

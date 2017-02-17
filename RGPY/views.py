@@ -42,22 +42,42 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
-    return render(request, "RGPY/StudentIndex.html", locals())
+    try:
+        if request.user.ouruser.is_student():
+            print(1)
+            return render(request, "RGPY/StudentIndex.html", locals())
+        elif request.user.ouruser.is_department():
+            print(2)
+            return render(request, "RGPY/StudentIndex.html", locals())
+        elif request.user.ouruser.is_college():
+            print(3)
+            return render(request, "RGPY/StudentIndex.html", locals())
+        elif request.user.ouruser.is_manage():
+            print(4)
+            return render(request, "RGPY/Manage/ManageIndex.html", locals())
+    except:
+        print(5)
+        return render(request, "RGPY/Manage/ManageIndex.html", locals())
 
 
 @login_required(login_url='/login/')
 def user_info(request):
+    print("------")
+    print(dir(request.user))
+    print("------")
+    print(dir(request.user.ouruser))
+    print("------")
     student = {
-        "first_name": request.user.student.get_short_name(),
-        "username": request.user.student.get_username(),
-        "phone": request.user.student.phone,
-        "email": request.user.student.email,
-        "banji": request.user.student.banji,
-        "department": request.user.student.banji.department,
-        "college": request.user.student.banji.department.college,
+        "first_name": request.user.ouruser.student.get_short_name(),
+        "username": request.user.ouruser.student.get_username(),
+        "phone": request.user.ouruser.student.phone,
+        "email": request.user.ouruser.student.email,
+        "banji": request.user.ouruser.student.banji,
+        "department": request.user.ouruser.student.banji.department,
+        "college": request.user.ouruser.student.banji.department.college,
     }
     if request.method == "POST" and request.POST:
-        u = Student.objects.get(username=request.user.student.get_username())
+        u = Student.objects.get(username=request.user.ouruser.student.get_username())
         u.phone = request.POST.get("phone")
         u.email = request.POST.get("email")
         new_passwd = request.POST.get("password_new", "")

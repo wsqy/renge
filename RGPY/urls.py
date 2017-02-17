@@ -5,7 +5,7 @@ app_name = 'RGPY'
 
 urlpatterns = [
     # 测试样例
-    url(r'^test', views.test, name='test'),
+    url(r'test', views.test, name='test'),
     url(r'^$', views.index, name='index'),
     url(r'^index', views.index, name='index'),
     url(r'^test', views.test, name='test'),
