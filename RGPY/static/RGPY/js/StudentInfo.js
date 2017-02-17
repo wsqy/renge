@@ -27,9 +27,8 @@ $(function(){
     $("#id_password").blur(function(){
         var passwd=$(this).val();
         var username=$("#id_username").val();
-        var host=$("#id_host").val();
         $.ajax({
-            url: "http://"+host+"/check_passwd?passwd="+passwd+"&username="+username,
+            url: "/check_passwd?passwd="+passwd+"&username="+username,
             success: function(result){
                 if(result == 0){
                     flag = false

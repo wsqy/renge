@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from RGPY.models import Student, Banji
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+import django.db.models.fields.related_descriptors
 
 
 # Create your views here.
@@ -54,7 +55,6 @@ def user_info(request):
         "banji": request.user.student.banji,
         "department": request.user.student.banji.department,
         "college": request.user.student.banji.department.college,
-        "host": request.get_host(),
     }
     if request.method == "POST" and request.POST:
         u = Student.objects.get(username=request.user.student.get_username())
