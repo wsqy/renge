@@ -1,0 +1,16 @@
+{% extends 'RGPY/Manage/base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+<form action="" method="post" class="form-horizontal" role="form">
+    {% csrf_token %}
+    <ul>
+        {{create_department_manage_form.as_p }}
+    </ul>
+    <div class="form-group submit_userInfo">
+        <div class="col-sm-offset-4 col-sm-6">
+          <button type="submit" class="btn btn-primary" >新建用户</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

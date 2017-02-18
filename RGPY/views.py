@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from RGPY.models import Student, Banji
+from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-import django.db.models.fields.related_descriptors
+from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, ChangePasswordForm
 
 
 # Create your views here.
@@ -42,31 +42,23 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
+    if request.GET.get("mes"):
+        message = request.GET.get("mes")
     try:
         if request.user.ouruser.is_student():
-            print(1)
             return render(request, "RGPY/StudentIndex.html", locals())
         elif request.user.ouruser.is_department():
-            print(2)
             return render(request, "RGPY/StudentIndex.html", locals())
         elif request.user.ouruser.is_college():
-            print(3)
             return render(request, "RGPY/StudentIndex.html", locals())
         elif request.user.ouruser.is_manage():
-            print(4)
             return render(request, "RGPY/Manage/ManageIndex.html", locals())
     except:
-        print(5)
         return render(request, "RGPY/Manage/ManageIndex.html", locals())
 
 
 @login_required(login_url='/login/')
 def user_info(request):
-    print("------")
-    print(dir(request.user))
-    print("------")
-    print(dir(request.user.ouruser))
-    print("------")
     student = {
         "first_name": request.user.ouruser.student.get_short_name(),
         "username": request.user.ouruser.student.get_username(),
@@ -98,3 +90,67 @@ def check_passwd(request):
     else:
         result = 0
     return HttpResponse(result)
+
+
+@login_required(login_url='/login/')
+def create_college_manage(request):
+    if request.method == "POST":
+        # 如果是POST,接收用户输入
+        create_college_manage_form = CreateCollegeForm(request.POST)
+        # 表单验证
+        if create_college_manage_form.is_valid():
+            CollegeManage.objects.create_user(
+                username=create_college_manage_form.cleaned_data['username'],
+                password=create_college_manage_form.cleaned_data['password'],
+                first_name=create_college_manage_form.cleaned_data['first_name'],
+                email=create_college_manage_form.cleaned_data['email'],
+                phone=create_college_manage_form.cleaned_data['phone'],
+                level=1,
+            )
+            message = "成功创建学院管理员:%s" % (create_college_manage_form.cleaned_data['username'])
+            return redirect("/?mes=%s" % (message,))
+    else:
+        create_college_manage_form = CreateCollegeForm()
+    return render(request, "RGPY/Manage/create_college.html", locals())
+
+
+@login_required(login_url='/login/')
+def create_department_manage(request):
+    if request.method == "POST":
+        # 如果是POST,接收用户输入
+        create_department_manage_form = CreateDepartmentForm(request.POST)
+        # 表单验证
+        if create_department_manage_form.is_valid():
+            DepartmentManage.objects.create_user(
+                username=create_department_manage_form.cleaned_data['username'],
+                password=create_department_manage_form.cleaned_data['password'],
+                first_name=create_department_manage_form.cleaned_data['first_name'],
+                email=create_department_manage_form.cleaned_data['email'],
+                phone=create_department_manage_form.cleaned_data['phone'],
+                department=create_department_manage_form.cleaned_data['department'],
+                level=2,
+            )
+            message = "成功创建系管理员:%s" % (create_department_manage_form.cleaned_data['username'])
+            return redirect("/?mes=%s" % (message,))
+    else:
+        create_department_manage_form = CreateDepartmentForm()
+    return render(request, "RGPY/Manage/create_department.html", locals())
+
+
+@login_required(login_url='/login/')
+def change_password(request):
+    if request.method == "POST":
+        # 如果是POST,接收用户输入
+        change_password_form = ChangePasswordForm(request.POST)
+        # 表单验证
+        if change_password_form.is_valid():
+            u = Manage.objects.get(username=request.user.ouruser.manage.get_username())
+            new_passwd = request.POST.get("password_new", "")
+            if new_passwd != "":
+                u.set_password(new_passwd)
+                u.save()
+            message = "密码修改成功"
+            return redirect("/?mes=%s" % (message,))
+    else:
+        change_password_form = ChangePasswordForm()
+    return render(request, "RGPY/change_password.html", locals())
