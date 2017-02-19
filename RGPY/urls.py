@@ -25,4 +25,12 @@ urlpatterns = [
 
     # 修改密码(管理员专用的)
     url(r'^change_password', views.change_password, name='change_password'),
+    # 重置密码
+    url(r'^reset_password', views.reset_password, name='reset_password'),
+
+
+    # 报表
+    # 用户类
+    url(r'^list/college', views.college_list, name='college_list'),
+    url(r'^list/department', views.department_list, name='department_list'),
 ]

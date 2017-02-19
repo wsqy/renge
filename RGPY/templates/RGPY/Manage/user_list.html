@@ -1,0 +1,28 @@
+{% extends 'RGPY/Manage/base.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+    <script src="{% static 'RGPY/js/reset_password.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>用户名</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>手机号</th>
+        <th>重置密码</th>
+    </tr>
+    {% for user in user_list %}
+        <tr id="{{user.id}}">
+            <td>{{user.username}}</td>
+            <td>{{user.first_name|default:"未填写"}}</td>
+            <td>{{user.email|default:"未填写"}}</td>
+            <td>{{user.phone|default_if_none:"未填写"}}</td>
+            <td><button type="button" class="btn btn-primary btn-sm" id="reset_pwd">密码重置</button></td>
+        </tr>
+    {% endfor %}
+  </table>
+  </div>
+{% endblock %}
