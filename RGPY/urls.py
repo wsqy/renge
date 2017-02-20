@@ -31,6 +31,9 @@ urlpatterns = [
 
     # 报表
     # 用户类
-    url(r'^list/college', views.college_list, name='college_list'),
+    url(r'^user_list/college', views.college_user_list, name='college_user_list'),
+    url(r'^user_list/department', views.department_user_list, name='department_user_list'),
+
+    # 系
     url(r'^list/department', views.department_list, name='department_list'),
 ]

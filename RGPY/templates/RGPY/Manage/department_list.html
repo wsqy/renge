@@ -1,0 +1,13 @@
+{% extends 'RGPY/Manage/base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+{% if flag %}
+    <iframe src="/admin/RGPY/department/" frameborder="0" width="1050" scrolling="No" height="1200" style="margin-top:-100px"></iframe>
+{% else %}
+    <div class="alert alert-warning alert-dismissible alert_dismissible alert_dismissible2" role="alert" >
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>抱歉, 此页面只有超级管理员才能查看</strong>
+    </div>
+{% endif %}
+{% endblock %}

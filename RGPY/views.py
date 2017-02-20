@@ -187,13 +187,17 @@ def getPage(request, user_list, pageListNum=10):
 
 
 @login_required(login_url='/login/')
-def college_list(request):
+def college_user_list(request):
+    # try:
+    #     user_list = CollegeManage.objects.all()
+    # except:
+    #     raise Http404()
     user_list = get_list_or_404(CollegeManage)
     return render(request, 'RGPY/Manage/user_list.html', locals())
 
 
 @login_required(login_url='/login/')
-def department_list(request):
+def department_user_list(request):
     user_list = get_list_or_404(DepartmentManage)
     return render(request, 'RGPY/Manage/user_list.html', locals())
 
@@ -202,10 +206,22 @@ def department_list(request):
 def reset_password(request):
     userId = request.GET.get("userId")
     u = OurUser.objects.get(id=userId)
-    if int(request.user.ouruser.level) > int(u.level):
+    print(request.user.ouruser.level)
+    print(u.level)
+    if int(request.user.ouruser.level) >= int(u.level):
         u.set_password("123456")
         u.save()
         result = 1
     else:
         result = 0
     return HttpResponse(result)
+
+
+@login_required(login_url='/login/')
+def department_list(request):
+    # 如果用户级别是4(超级管理员)，设置flag=True即可以查看,否则不允许查看
+    if int(request.user.ouruser.level) == 4:
+        flag = True
+    else:
+        flag = False
+    return render(request, 'RGPY/Manage/department_list.html', locals())

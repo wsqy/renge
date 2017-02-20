@@ -3,7 +3,7 @@ $(function(){
         var user = $(this).parents("tr");
         var id = user.attr("id")
         var username = user.children("td:first-child").text()
-        alert(username)
+        // alert(username)
         // alert(id);
         $.ajax({url:"/reset_password?userId="+id, success:function(result){
             if(result==1){
