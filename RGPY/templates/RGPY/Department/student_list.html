@@ -55,7 +55,8 @@
     <p>表中数据格式为：学号 姓名 邮箱(可以为空) 手机号(可以为空) 是否是班级管理员(注1)</p>
     <p>注1:是班级管理员的学生在此处设置为1,其余的则认为是非班级管理员，可以稍后设置</p>
     <p>注2:如果不了解上传的格式要求可以点击 下载demo 按钮 尝试一下</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'RGPY:download_demo_table'%}" role="button">下载demo</a>
+    {#<a class="btn btn-primary btn-lg" href="{% url 'RGPY:download_demo_table'%}" role="button">下载demo</a>#}
+    <a class="btn btn-primary btn-lg" href="/media/demo/13网工1班.xls" role="button">下载demo</a>
     <button class="btn btn-primary btn-lg" name="uploadtable">上传学生表</button>
     <button class="btn btn-primary btn-lg" name="uploadtable">上传学生表</button>
 </div>

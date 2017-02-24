@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_list_or_404
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, StreamingHttpResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -354,18 +354,28 @@ def user_del(request, userId):
 def download_demo_table(request):
     # do something...
     import os
-    the_file_dir = r'RGPY/media/demo/'
-    the_file_name = the_file_dir + '13网工1班.xls'
+    the_file_dir = os.path.join('media', 'demo')
+    print(the_file_dir)
+    the_file_name = r'13网工1班.xls'
+    the_file = os.path.join(the_file_dir, the_file_name)
+    print(the_file)
     if not os.path.exists(the_file_dir):
         os.makedirs(the_file_dir)
         print("创建了目录%s" % (the_file_dir,))
-    elif not os.path.isfile(the_file_name):
-        print("创建了文件%s" % (the_file_name,))
-        f = open(the_file_name, 'w')
-        f.close()
     else:
-        print("啥都不用创建,这才是正常的状态。")
-    response = HttpResponse(content_type='application/x-xls')
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+        if not os.path.isfile(the_file):
+            print("创建了文件%s" % (the_file,))
+            f = open(the_file, 'w')
+            f.close()
+        else:
+            print("啥都不用创建,这才是正常的状态。")
+    # 大文件下载，设定缓存大小
+
+    f = open(the_file, 'rb')
+    data = f.read()
+    f.close()
+    response = HttpResponse(data, content_type='application/vnd.ms-excel')
+    print(the_file_name)
+    response['Content-Disposition'] = 'attachment; filename=%s' % ("demo.xls",)
 
     return response

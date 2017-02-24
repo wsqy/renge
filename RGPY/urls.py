@@ -54,7 +54,7 @@ urlpatterns = [
     ])),
 
     url(r'^excel/', include([
-        url(r'^download_demo/', views.download_demo_table, name="download_demo_table"),
+        
     ])),
 
 ]
