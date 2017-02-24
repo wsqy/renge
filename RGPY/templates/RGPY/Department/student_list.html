@@ -1,0 +1,62 @@
+{% extends 'RGPY/Department/base.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+    <script src="{% static 'RGPY/js/reset_password.js' %}"></script>
+    <script src="{% static 'RGPY/js/user_del.js' %}"></script>
+    <script>
+    $(function(){
+        $('.my_checkbox').change(function(){
+            var student = $(this).parents("tr");
+            var id = student.attr("id");
+            // alert(id);
+            $.ajax({url:"/department/student/"+id+"/reset_admin/", success:function(result){
+
+            }});
+            // alert("checked");
+        });
+
+    });
+    </script>
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+        <th>手机</th>
+        <th>班级管理员</th>
+        <th>班级</th>
+        <th>时长</th>
+        <th>重置密码</th>
+        <th>删除</th>
+    </tr>
+    {% for student in student_list %}
+        <tr id="{{ student.id }}">
+            <td>{{student}}</td>
+            <td>{{student.get_short_name}}</td>
+            <td>{{student.email}}</td>
+            <td>{{student.phone}}</td>
+            <td><input class="my_checkbox" type="checkbox" {% if student.is_banji_admin %}checked {%endif%} /></td>
+            <td>{{student.banji}}</td>
+            <td>{{student.score}}</td>
+            <td><button type="button" class="btn btn-primary btn-sm" name="reset_pwd">密码重置</button></td>
+            <td><button type="button" class="btn btn-primary btn-sm" name="user_del">删除学生</button></td>
+        </tr>
+    {% endfor %}
+  </table>
+</div>
+<div class="jumbotron">
+    <h1>批量注册学生</h1>
+    <p>刚刚创建的班级可以在这里批量导入学生账号</p>
+    <p>上传的表格命名格式为：班级名.xls</p>
+    <p>表中数据格式为：学号 姓名 邮箱(可以为空) 手机号(可以为空) 是否是班级管理员(注1)</p>
+    <p>注1:是班级管理员的学生在此处设置为1,其余的则认为是非班级管理员，可以稍后设置</p>
+    <p>注2:如果不了解上传的格式要求可以点击 下载demo 按钮 尝试一下</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'RGPY:download_demo_table'%}" role="button">下载demo</a>
+    <button class="btn btn-primary btn-lg" name="uploadtable">上传学生表</button>
+    <button class="btn btn-primary btn-lg" name="uploadtable">上传学生表</button>
+</div>
+{% endblock %}

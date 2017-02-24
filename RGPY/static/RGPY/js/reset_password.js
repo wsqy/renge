@@ -1,5 +1,5 @@
 $(function(){
-    $("button").click(function(){
+    $("button[name='reset_pwd']").click(function(){
         var user = $(this).parents("tr");
         var id = user.attr("id")
         var username = user.children("td:first-child").text()

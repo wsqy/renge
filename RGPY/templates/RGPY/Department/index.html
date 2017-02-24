@@ -1,0 +1,12 @@
+{% extends 'RGPY/Department/base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+{% if message %}
+<div class="alert alert-warning alert-dismissible alert_dismissible alert_dismissible2" role="alert" >
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>{{ message }}</strong>
+</div>
+{% endif %}
+系管理员: {{ request.user }}
+{% endblock %}

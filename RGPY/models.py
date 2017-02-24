@@ -32,10 +32,12 @@ class Banji(models.Model):
     """
     banji = models.CharField("班级", max_length=50)
     department = models.ForeignKey(Department, verbose_name="所属系别", default=2, blank=True)
+    grade = models.CharField("年级", max_length=10, default="2013",)
 
     class Meta:
         verbose_name = "班级"
         verbose_name_plural = verbose_name
+        ordering = ['-grade', ]
 
     def __str__(self):
         return self.banji
@@ -70,6 +72,7 @@ class OurUser(User):
 class Student(OurUser):
     banji = models.ForeignKey(Banji, verbose_name="所属班级", default=1, blank=True)
     is_banji_admin = models.BooleanField(
+        verbose_name="是否是班级管理员",
         default=False,
         help_text='是否是班级管理员.',
     )
@@ -79,6 +82,7 @@ class Student(OurUser):
     class Meta:
         verbose_name = "学生"
         verbose_name_plural = verbose_name
+        ordering = ['username', ]
 
 
 class DepartmentManage(OurUser):

@@ -1,7 +1,14 @@
 from RGPY import views
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 app_name = 'RGPY'
+
+# department_patterns = [
+#     url(r'^banji_list/', views.banji_list, name='banji_list'),
+#     url(r'^banji/(?P<banji>[0-9]+)/$', views.banji_info, name='banji_info'),
+#     url(r'^banji/(?P<banji>[0-9]+)/delete/$', views.banji_delete, name='banji_delete'),
+#     url(r'^banji/add/$', views.banji_add, name='banji_add'),
+# ]
 
 urlpatterns = [
     # 测试样例
@@ -14,6 +21,7 @@ urlpatterns = [
     url(r'^register', views.register, name='register'),
     url(r'^login', views.login, name='login'),
     url(r'^logout', views.logout, name='logout'),
+    url(r'^user_del/(?P<userId>[0-9]+)/', views.user_del, name='user_del'),
 
     # 学生类
     url(r'^user_info', views.user_info, name='user_info'),
@@ -28,12 +36,25 @@ urlpatterns = [
     # 重置密码
     url(r'^reset_password', views.reset_password, name='reset_password'),
 
-
     # 报表
     # 用户类
     url(r'^user_list/college', views.college_user_list, name='college_user_list'),
     url(r'^user_list/department', views.department_user_list, name='department_user_list'),
 
-    # 系
+    # 系别列表
     url(r'^list/department', views.department_list, name='department_list'),
+
+    # 系管理员使用
+    url(r'^department/', include([
+        url(r'^banji_list/', views.banji_list, name='banji_list'),
+        url(r'^banji/(?P<banji>[0-9]+)/$', views.banji_info, name='banji_info'),
+        url(r'^banji/(?P<banji>[0-9]+)/delete/$', views.banji_delete, name='banji_delete'),
+        url(r'^banji/add/$', views.banji_add, name='banji_add'),
+        url(r'^student/(?P<student>[0-9]+)/reset_admin/$', views.student_reset_admin, name='student_reset_admin'),
+    ])),
+
+    url(r'^excel/', include([
+        url(r'^download_demo/', views.download_demo_table, name="download_demo_table"),
+    ])),
+
 ]

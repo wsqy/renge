@@ -1,0 +1,44 @@
+{% extends 'RGPY/Department/base.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+<style>
+    select{
+        margin-left: 15px;
+        width: 60px;
+        height: 25px;
+        margin-top: 3px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<form action="" method="post" class="form-horizontal" role="form">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_banji" class="col-sm-2 control-label">班级:</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="id_banji" name="banji" required="" placeholder="班级">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="id_grade" class="col-sm-2 control-label">年级:</label>
+      <select id="id_grade" name="grade" required="">
+        {%for grage in banji.grade%}
+            <option value="{{grage}}" {%if forloop.first%}selected="selected"{%endif%}>{{grage}}</option>
+        {%endfor%}
+        </select>
+    </div>
+    <div class="form-group">
+      <label for="id_department" class="col-sm-2 control-label">系别:</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="id_department" name="department" value="{{banji.department}}" disabled>
+      </div>
+
+    </div>
+    <div class="form-group banji_add">
+        <div class="col-sm-offset-4 col-sm-6">
+          <button type="submit" class="btn btn-primary" >创建班级</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'RGPY/base.html' %}
+{% block left %}
+  <ul class="nav" id="side-menu1">
+    <li>
+        <a><i class="fa fa-user fa-fw"></i>用户管理<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
+            <li>
+                <a href="{% url 'RGPY:banji_list'%}">查看班级</a>
+            </li>
+            <li>
+                <a href="{% url 'RGPY:banji_add'%}">增加班级</a>
+            </li>
+            <li>
+                <a href="/">查看系管理员</a>
+            </li>
+            <li>
+                <a href="/">创建院级管理员</a>
+            </li>
+            <li>
+                <a href="/">创建系管理员</a>
+            </li>
+            <li>
+                <a href="/">修改密码</a>
+            </li>
+            <li>
+                <a href="/">查看系列表</a>
+            </li>
+        </ul>
+    </li>
+
+  </ul>
+
+{% endblock %}

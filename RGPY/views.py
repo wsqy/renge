@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_list_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, StreamingHttpResponse
 from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, ChangePasswordForm
+from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, ChangePasswordForm, CreateBanjiForm
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
 
 
 # Create your views here.
@@ -59,16 +60,17 @@ def index(request):
             return render(request, "RGPY/StudentIndex.html", locals())
         elif request.user.ouruser.level == '2':
             print("系管理员")
-            return render(request, "RGPY/StudentIndex.html", locals())
+            return render(request, "RGPY/Department/index.html", locals())
         elif request.user.ouruser.level == '3':
             print("学院管理员")
             return render(request, "RGPY/StudentIndex.html", locals())
         elif request.user.ouruser.level == '4':
             print("超级管理员")
-            return render(request, "RGPY/Manage/ManageIndex.html", locals())
-    except:
+            return render(request, "RGPY/Manage/index.html", locals())
+    except Exception as e:
+        print(e)
         print("djang用户")
-        return render(request, "RGPY/Manage/ManageIndex.html", locals())
+        return render(request, "RGPY/Manage/index.html", locals())
 
 
 @login_required(login_url='/login/')
@@ -225,3 +227,145 @@ def department_list(request):
     else:
         flag = False
     return render(request, 'RGPY/Manage/department_list.html', locals())
+
+
+@login_required(login_url='/login/')
+def banji_list(request):
+    # print(dir(request.user.ouruser.departmentmanage.department))
+    department = request.user.ouruser.departmentmanage.department
+    # print(department)
+    # print(type(department))
+    # print("----")
+    result = get_list_or_404(Banji, department=department)
+    # print(result)
+    # banji = result[0]
+    # print(dir(banji))
+    # print(banji.grade)
+    # print(banji.id)
+    # print(banji.student_set.get(is_banji_admin=True))
+    # print(banji.student_set.count())
+    # print(department)
+    banji_list = []
+    for banji in result:
+        try:
+            # 过滤班级负责人
+            admin = banji.student_set.get(is_banji_admin=True)
+            # 看看班级负责人的姓名有没有
+            name = admin.get_short_name()
+            # 如果有学号后面再加姓名 类似于 241392335(王美熔)
+            if name:
+                admin = "%s(%s)" % (admin.username, name,)
+        except Exception as e:
+            # 如果没设置班级管理员,显示 未设置
+            print(e)
+            admin = "未设置"
+        one = {
+            'banji': banji,
+            'grade': banji.grade,
+            'count': banji.student_set.count(),
+            'admin': admin,
+            'department': department,
+            'id': banji.id,
+        }
+        banji_list.append(one)
+    return render(request, 'RGPY/Department/banji_list.html', locals())
+
+
+@login_required(login_url='/login/')
+def banji_info(request, banji):
+    student_list = Banji.objects.get(pk=banji).student_set.all()
+    print(student_list)
+    return render(request, 'RGPY/Department/student_list.html', locals())
+
+
+@login_required(login_url='/login/')
+def banji_delete(request, banji):
+    print(request.user.ouruser.level)
+    if int(request.user.ouruser.level) == 2:
+        print("班级%s" % (banji,))
+        Banji.objects.filter(pk=banji).delete()
+        result = 1
+    else:
+        result = 0
+    return HttpResponse(result)
+
+
+@login_required(login_url='/login/')
+def banji_add(request):
+    print(request.method)
+    grade_list = []
+    import time
+    year = time.strftime('%Y', time.localtime(time.time()))
+    month = time.strftime('%m', time.localtime(time.time()))
+    # month = "09"
+    # print(month)
+    if int(month) < 6:
+        year = str(int(year) - 1)
+    for i in range(4):
+        grade_list.append(year)
+        year = str(int(year) - 1)
+    banji = {
+        "department": request.user.ouruser.departmentmanage.department,
+        "grade": grade_list,
+    }
+    if request.method == "POST" and request.POST:
+        # print(request.POST)
+        Banji.objects.create(
+            banji=request.POST.get("banji"),
+            department=request.user.ouruser.departmentmanage.department,
+            grade=request.POST.get("grade"),
+        )
+        return HttpResponseRedirect(reverse('RGPY:banji_list'))
+    else:
+        banji_form = CreateBanjiForm()
+    return render(request, 'RGPY/Department/banji_add.html', locals())
+
+
+@login_required(login_url='/login/')
+def student_reset_admin(request, student):
+    print(request.user.ouruser.level)
+    if int(request.user.ouruser.level) == 2:
+        print("学生%s" % (student,))
+        u = Student.objects.get(pk=student)
+        is_admin = not u.is_banji_admin
+        u.is_banji_admin = is_admin
+        u.save()
+        result = 1
+    else:
+        result = 0
+    return HttpResponse(result)
+
+
+@login_required(login_url='/login/')
+def user_del(request, userId):
+    try:
+        u = OurUser.objects.get(pk=userId)
+        if int(u.level) < int(request.user.ouruser.level):
+            u.delete()
+            result = 1
+        else:
+            result = 0
+    except Exception as e:
+        print(e)
+        result = 0
+    return HttpResponse(result)
+
+
+def download_demo_table(request):
+    # do something...
+    import os
+    the_file_dir = r'RGPY/media/demo/'
+    the_file_name = the_file_dir + '13网工1班.xls'
+    if not os.path.exists(the_file_dir):
+        os.makedirs(the_file_dir)
+        print("创建了目录%s" % (the_file_dir,))
+    elif not os.path.isfile(the_file_name):
+        print("创建了文件%s" % (the_file_name,))
+        f = open(the_file_name, 'w')
+        f.close()
+    else:
+        print("啥都不用创建,这才是正常的状态。")
+    response = HttpResponse(content_type='application/x-xls')
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+
+    return response

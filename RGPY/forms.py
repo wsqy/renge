@@ -68,3 +68,9 @@ class ChangePasswordForm(forms.Form):
         if password_new != password_rep:
             self._errors['password_new_rep'] = self.error_class(["两次输入的密码不一致"])
         return cleaned_data
+
+
+class CreateBanjiForm(forms.Form):
+    banji = forms.CharField(label="班级", max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    grade = forms.CharField(label="年级", max_length=10, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    department = forms.CharField(label="系别", max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))

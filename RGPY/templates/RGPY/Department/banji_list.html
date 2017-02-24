@@ -1,0 +1,48 @@
+{% extends 'RGPY/Department/base.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+<script>
+$(function(){
+    $('button').click(function(){
+        var banji = $(this).parents("tr");
+        var id = banji.attr("id");
+        var banjiname = banji.children("td:first-child").text();
+        // alert(banjiname);
+        $.ajax({url:"/department/banji/"+id+"/delete/", success:function(result){
+            if(result==1){
+                alert("班级 "+banjiname+" 已删除");
+                window.location.reload();
+            }else{
+                alert("班级删除失败");
+            }
+        }});
+    });
+});
+</script>
+
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>班级</th>
+        <th>年级</th>
+        <th>班级负责人</th>
+        <th>班级人数</th>
+        <th>所属系别</th>
+        <th>删除班级</th>
+    </tr>
+    {% for banji in banji_list %}
+        <tr id="{{ banji.id }}">
+            <td><a href="{% url 'RGPY:banji_info' banji.id %}">{{banji.banji}}</a></td>
+            <td>{{banji.grade}}</td>
+            <td>{{banji.admin}}</td>
+            <td>{{banji.count}}</td>
+            <td>{{banji.department}}</td>
+            <td><button type="button" class="btn btn-primary btn-sm" id="banji_delete">删除</button></td>
+        </tr>
+    {% endfor %}
+  </table>
+  </div>
+{% endblock %}
