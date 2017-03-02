@@ -3,13 +3,6 @@ from django.conf.urls import url, include
 
 app_name = 'RGPY'
 
-# department_patterns = [
-#     url(r'^banji_list/', views.banji_list, name='banji_list'),
-#     url(r'^banji/(?P<banji>[0-9]+)/$', views.banji_info, name='banji_info'),
-#     url(r'^banji/(?P<banji>[0-9]+)/delete/$', views.banji_delete, name='banji_delete'),
-#     url(r'^banji/add/$', views.banji_add, name='banji_add'),
-# ]
-
 urlpatterns = [
     # 测试样例
     url(r'test', views.test, name='test'),
@@ -54,7 +47,8 @@ urlpatterns = [
     ])),
 
     url(r'^excel/', include([
-        
+        url(r'^upload/student_list', views.student_list_upload, name='student_list_upload'),
+
     ])),
 
 ]

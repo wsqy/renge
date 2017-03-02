@@ -351,31 +351,20 @@ def user_del(request, userId):
     return HttpResponse(result)
 
 
-def download_demo_table(request):
-    # do something...
-    import os
-    the_file_dir = os.path.join('media', 'demo')
-    print(the_file_dir)
-    the_file_name = r'13网工1班.xls'
-    the_file = os.path.join(the_file_dir, the_file_name)
-    print(the_file)
-    if not os.path.exists(the_file_dir):
-        os.makedirs(the_file_dir)
-        print("创建了目录%s" % (the_file_dir,))
+def student_list_upload(request):
+    if request.method == "POST":
+        print(request.FILES)
+        files = request.FILES.get('excel')
+        print(files)
+        import xlrd
+        wb = xlrd.open_workbook(filename=None, file_contents=request.FILES['excel'].read())
+        # 关键点在于这里
+        table = wb.sheets()[0]
+        row = table.nrows
+        for i in range(1, row):
+            col = table.row_values(i)
+        print(col)
+        return HttpResponse("POST")
     else:
-        if not os.path.isfile(the_file):
-            print("创建了文件%s" % (the_file,))
-            f = open(the_file, 'w')
-            f.close()
-        else:
-            print("啥都不用创建,这才是正常的状态。")
-    # 大文件下载，设定缓存大小
-
-    f = open(the_file, 'rb')
-    data = f.read()
-    f.close()
-    response = HttpResponse(data, content_type='application/vnd.ms-excel')
-    print(the_file_name)
-    response['Content-Disposition'] = 'attachment; filename=%s' % ("demo.xls",)
-
-    return response
+        print(request.method)
+        return HttpResponse("test")
