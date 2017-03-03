@@ -3,17 +3,34 @@
 {% block custom_static %}
     <script src="{% static 'RGPY/js/reset_password.js' %}"></script>
     <script src="{% static 'RGPY/js/user_del.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'RGPY/vendor/bootstrap/css/bootstrap-switch.min.css' %}">
+    <script type="text/javascript" src="{% static 'RGPY/vendor/bootstrap/js/bootstrap-switch.min.js' %}"></script>
+
     <script>
     $(function(){
-        $('.my_checkbox').change(function(){
-            var student = $(this).parents("tr");
-            var id = student.attr("id");
-            // alert(id);
-            $.ajax({url:"/department/student/"+id+"/reset_admin/", success:function(result){
+        $(".my_checkbox").bootstrapSwitch({
+            onText:'是',
+            offText:'不是',
+            onColor:"success",
+            offColor:"info",
+            size:"mini",
+            onSwitchChange:function(event,state){
+                var student = $(this).parents("tr");
+                var id = student.attr("id");
+                $.ajax({url:"/department/student/"+id+"/reset_admin/", success:function(result){
 
-            }});
-            // alert("checked");
+                }});
+            }
         });
+
+        // $(".my_checkbox11").change(function(){
+        //     var student = $(this).parents("tr");
+        //     var id = student.attr("id");
+        //     $.ajax({url:"/department/student/"+id+"/reset_admin/", success:function(result){
+        //
+        //     }});
+        //     // alert("checked");
+        // });
 
     });
 
@@ -44,8 +61,8 @@
         <tr id="{{ student.id }}">
             <td>{{student}}</td>
             <td>{{student.get_short_name}}</td>
-            <td>{{student.email}}</td>
-            <td>{{student.phone}}</td>
+            <td>{{student.email|default:"未填写"}}</td>
+            <td>{{student.phone|default:"未填写"}}</td>
             <td><input class="my_checkbox" type="checkbox" {% if student.is_banji_admin %}checked {%endif%} /></td>
             <td>{{student.banji}}</td>
             <td>{{student.score}}</td>

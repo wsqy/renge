@@ -19,8 +19,8 @@
             <td>{{user.username}}</td>
             <td>{{user.first_name|default:"未填写"}}</td>
             <td>{{user.email|default:"未填写"}}</td>
-            <td>{{user.phone|default_if_none:"未填写"}}</td>
-            <td><button type="button" class="btn btn-primary btn-sm" id="reset_pwd">密码重置</button></td>
+            <td>{{user.phone|default_if_none:"未填写"|default:"未填写"}}</td>
+            <td><button type="button" class="btn btn-primary btn-sm" name="reset_pwd">密码重置</button></td>
         </tr>
     {% endfor %}
   </table>
