@@ -356,14 +356,24 @@ def student_list_upload(request):
         print(request.FILES)
         files = request.FILES.get('excel')
         print(files)
+        import os
         import xlrd
         wb = xlrd.open_workbook(filename=None, file_contents=request.FILES['excel'].read())
         # 关键点在于这里
         table = wb.sheets()[0]
-        row = table.nrows
-        for i in range(1, row):
-            col = table.row_values(i)
-        print(col)
+        for i in range(1, table.nrows):
+            row = table.row_values(i)
+            phone = None if row[3] == '' else int(row[3])
+            is_banji_admin = True if row[4] == '1' else False
+            banji = row[5] or os.path.splitext(files)[1]
+            Student.objects.create_user(
+                username=int(row[0]),
+                first_name=row[1],
+                email=row[2],
+                phone=phone,
+                is_banji_admin=is_banji_admin,
+                banji=Banji.objects.get(banji=banji),
+            )
         return HttpResponse("POST")
     else:
         print(request.method)
