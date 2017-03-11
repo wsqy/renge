@@ -1,0 +1,31 @@
+<div class="page-header">
+  <h1 style="background-color:#eee">报名信息</h1>
+
+</div>
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>班级</th>
+        <th>系别</th>
+        <th>手机号码</th>
+        <th>邮箱</th>
+        <th>是否批准申请</th>
+        <th>增加时长</th>
+    </tr>
+    {% for student in student_list %}
+        <tr id="{{ student.id }}">
+            <td>{{student.usernae}}</td>
+            <td>{{student.first_name}}</td>
+            <td>{{student.banji}}</td>
+            <td>{{student.department}}</td>
+            <td>{{student.phone}}</td>
+            <td>{{student.email}}</td>
+            <td>是否批准申请</td>
+            <td>增加时长</td>
+
+        </tr>
+    {% endfor %}
+  </table>
+  </div>

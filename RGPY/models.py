@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import django.utils.timezone as timezone
 
 
 # Create your models here.
@@ -104,3 +105,35 @@ class Manage(OurUser):
     class Meta:
         verbose_name = "管理员"
         verbose_name_plural = verbose_name
+
+
+class COS(models.Model):
+    service = models.CharField(max_length=32, verbose_name="任务类别")
+
+    class Meta:
+        verbose_name = "任务类别"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.service)
+
+
+class Mission(models.Model):
+    desc = models.CharField(max_length=50, verbose_name="任务名称", blank=False)
+    promulgator = models.ForeignKey(User, verbose_name="任务发布者")
+    required = models.PositiveSmallIntegerField(verbose_name="需要的人数", )
+    service_type = models.ForeignKey(COS, verbose_name="任务类型", default=2)
+    start_time = models.DateField(verbose_name="开始报名时间", default=timezone.now)
+    end_time = models.DateField(verbose_name="报名结束时间", default=timezone.now)
+    task_time = models.DateField(verbose_name="任务完成时间",default=timezone.now, )
+    score = models.PositiveSmallIntegerField(verbose_name="时长", default=2)
+    remark = models.TextField(verbose_name="备注")
+    flag = models.BooleanField(verbose_name="是否删除", default=False)
+
+    class Meta:
+        verbose_name = "任务"
+        verbose_name_plural = verbose_name
+        ordering = ('-task_time', 'end_time', '-id')
+
+    def __str__(self):
+        return str(self.desc)

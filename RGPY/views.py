@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_list_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser
+from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser, Mission, COS
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, ChangePasswordForm, CreateBanjiForm
@@ -351,6 +351,7 @@ def user_del(request, userId):
     return HttpResponse(result)
 
 
+@login_required(login_url='/login/')
 def student_list_upload(request):
     if request.method == "POST":
         print(request.FILES)
@@ -364,7 +365,10 @@ def student_list_upload(request):
         for i in range(1, table.nrows):
             row = table.row_values(i)
             phone = None if row[3] == '' else int(row[3])
-            is_banji_admin = True if row[4] == '1' else False
+            if row[4] == '1':
+                is_banji_admin = True
+            else:
+                is_banji_admin = False
             banji = row[5] or os.path.splitext(files)[1]
             Student.objects.create_user(
                 username=int(row[0]),
@@ -374,7 +378,70 @@ def student_list_upload(request):
                 is_banji_admin=is_banji_admin,
                 banji=Banji.objects.get(banji=banji),
             )
-        return HttpResponse("POST")
+        return redirect(request.MEAT.get("HTTP_REFERER", "/"))
     else:
         print(request.method)
-        return HttpResponse("test")
+        error_message = "上传错误,请检查"
+        return render("404.html", locals())
+
+
+@login_required(login_url='/login/')
+def task_list(request):
+    task_list = Mission.objects.filter(promulgator_id=request.user.id)
+    print(task_list)
+    return render(request, "RGPY/Department/task_list.html", locals())
+
+
+@login_required(login_url='/login/')
+def task_publish(request):
+    if request.method == "POST":
+        print(request.POST)
+        mission = Mission()
+        mission.desc = request.POST.get('desc')
+        mission.promulgator = OurUser.objects.get(id=request.user.id)
+        mission.required = request.POST.get('required')
+        mission.service_type = COS.objects.get(id=(int(request.user.ouruser.level) + 1))
+        mission.start_time = str2date(request.POST.get('start_time'))
+        mission.end_time = str2date(request.POST.get('end_time'))
+        mission.task_time = str2date(request.POST.get('task_time'))
+        mission.score = request.POST.get('score')
+        mission.remark = request.POST.get('remark')
+        mission.save()
+        return redirect(reverse('RGPY:task_list'))
+    else:
+        return render(request, 'RGPY/Department/task_publish.html', locals())
+
+
+@login_required(login_url='/login/')
+def task_delete(request, taskid):
+    try:
+        m = Mission.objects.get(id=taskid)
+        m.flag = not m.flag
+        m.save()
+        result = 1
+    except Exception as e:
+        print(e)
+        result = -1
+    return HttpResponse(result)
+
+
+def str2date(str):
+    return str.replace('/', '-').replace('年', '-').replace('月', '-').replace('日', '')
+
+
+@login_required(login_url='/login/')
+def task_info(request, taskid):
+    mission = Mission.objects.get(id=taskid)
+    if request.method == "POST":
+        print(request.POST)
+        mission.desc = request.POST.get('desc')
+        mission.required = request.POST.get('required')
+        mission.start_time = str2date(request.POST.get('start_time'))
+        mission.end_time = str2date(request.POST.get('end_time'))
+        mission.task_time = str2date(request.POST.get('task_time'))
+        mission.score = request.POST.get('score')
+        mission.remark = request.POST.get('remark')
+        mission.save()
+        return redirect(reverse('RGPY:task_list'))
+    else:
+        return render(request, 'RGPY/Department/task_info.html', locals())

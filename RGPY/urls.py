@@ -51,4 +51,13 @@ urlpatterns = [
 
     ])),
 
+    url(r'^task/', include([
+        url(r'^publish', views.task_publish, name='task_publish'),
+        url(r'^list', views.task_list, name='task_list'),
+        url(r'^(?P<taskid>[0-9]+)/del/$', views.task_delete, name='task_delete'),
+        url(r'^(?P<taskid>[0-9]+)/info/$', views.task_info, name='task_info'),
+
+    ])),
+
+
 ]

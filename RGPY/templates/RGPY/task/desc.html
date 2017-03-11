@@ -1,0 +1,53 @@
+<div class="form-group">
+  <label for="id_desc" class="col-sm-2 control-label">任务名称</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control taskInfo" id="id_desc" name="desc" required="" value="{{mission.desc}}" disabled="true">
+  </div>
+</div>
+<div class="form-group">
+  <label for="id_required" class="col-sm-2 control-label">需要的人数</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control taskInfo" id="id_required" maxlength="20" name="required" required=""  value="{{mission.required}}" disabled="true">
+  </div>
+</div>
+<div class="form-group">
+  <label for="id_start_time" class="col-sm-2 control-label">开始报名时间</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control taskInfo" id="id_start_time" name="start_time" required="" value="{{mission.start_time}}" disabled="true">
+  </div>
+</div>
+<div class="form-group">
+  <label for="id_end_time" class="col-sm-2 control-label">报名结束时间</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control taskInfo" id="id_end_time" name="end_time" required="" value="{{mission.end_time}}" disabled="true">
+  </div>
+</div>
+<div class="form-group">
+  <label for="id_task_time" class="col-sm-2 control-label">任务完成时间</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control taskInfo" id="id_task_time" name="task_time" required="" value="{{mission.task_time}}" disabled="true">
+  </div>
+</div>
+<div class="form-group">
+  <label for="id_score" class="col-sm-2 control-label">时长</label>
+  <div class="col-sm-7">
+    <input type="number" class="form-control taskInfo" id="id_score" name="score" required="" min="1" value="{{mission.score}}" disabled="true">
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="id_remark" class="col-sm-2 control-label">备注</label>
+  <div class="col-sm-7">
+    <textarea class="form-control taskInfo" rows="5" id="id_remark" name="remark" disabled="true"> {{mission.remark}}</textarea>
+  </div>
+</div>
+<div class="form-group edit_userInfo">
+    <div class="col-sm-offset-2 col-sm-6">
+      <button type="button" class="btn btn-primary" name="task_edit">修改任务</button>
+    </div>
+</div>
+<div class="form-group submit_edit">
+    <div class="col-sm-offset-2 col-sm-6">
+      <button type="submit" class="btn btn-primary" name="sumbit_edit">提交修改</button>
+    </div>
+</div>

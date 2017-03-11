@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'RGPY/vendor/bootstrap/css/bootstrap-switch.min.css' %}">
+<script type="text/javascript" src="{% static 'RGPY/vendor/bootstrap/js/bootstrap-switch.min.js' %}"></script>
+<script>
+$(function(){
+    $("[name='task_delete']").bootstrapSwitch({
+        onText:'是',
+        offText:'否',
+        onColor:"success",
+        offColor:"info",
+        size:"mini",
+        onSwitchChange:function(event,state){
+            var task = $(this).parents("tr");
+            var id = task.attr("id");
+            var taskname = task.children("td:first-child").text();
+            $.ajax({url:"/task/"+id+"/del/", success:function(result){
+
+            }});
+        }
+    });
+});
+</script>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>任务描述</th>
+        <th>需要人数</th>
+        <th>开始报名时间</th>
+        <th>报名结束时间</th>
+        <th>任务完成时间</th>
+        <th>时长</th>
+        <th>发布任务</th>
+    </tr>
+    {% for task in task_list %}
+        <tr id="{{ task.id }}">
+            <td><a href=" {% url 'RGPY:task_info' task.id %}">{{task.desc}}</a></td>
+            <td>{{task.required}}</td>
+            <td>{{task.start_time}}</td>
+            <td>{{task.end_time}}</td>
+            <td>{{task.task_time}}</td>
+            <td>{{task.score}}</td>
+            <td><input type="checkbox" name="task_delete" {% if task.flag %}checked {%endif%} /></td>
+        </tr>
+    {% endfor %}
+  </table>
+  </div>
