@@ -137,3 +137,10 @@ class Mission(models.Model):
 
     def __str__(self):
         return str(self.desc)
+
+
+class TaskApply(models.Model):
+    student = models.ForeignKey(Student, verbose_name="申请人")
+    task = models.ForeignKey(Mission, verbose_name="任务")
+    is_approval = models.BooleanField(verbose_name="是否批准", default=False)
+    add_score = models.BooleanField(verbose_name="是否增加时长", default=False)
