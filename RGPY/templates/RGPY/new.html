@@ -1,0 +1,27 @@
+{% load staticfiles %}
+
+{% block custom_static %}
+<script>
+$(function(){
+    $('button').click(function(){
+        newid =$(this).attr("name");
+        $.ajax({url:"/news/"+newid+"/read/", success:function(result){
+            alert("您已阅读了本消息");
+        }});
+    });
+});
+</script>
+
+{% endblock %}
+
+{% for new in news_list %}
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button name="{{new.id}}" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;我已阅读</span></button>
+  <strong>{{new.info}}</strong>
+</div>
+{% empty %}
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button name="{{new.id}}" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>暂时没有未读消息</strong>
+</div>
+{% endfor %}

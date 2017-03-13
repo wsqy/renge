@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_list_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser, Mission, COS
+from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser, Mission, COS, TaskApply, NEWS
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, ChangePasswordForm, CreateBanjiForm
@@ -57,7 +57,7 @@ def index(request):
     try:
         if request.user.ouruser.level == '1':
             print("学生用户")
-            return render(request, "RGPY/StudentIndex.html", locals())
+            return render(request, "RGPY/student/StudentIndex.html", locals())
         elif request.user.ouruser.level == '2':
             print("系管理员")
             return render(request, "RGPY/Department/index.html", locals())
@@ -94,7 +94,7 @@ def user_info(request):
         u.save()
         return HttpResponse("个人信息修改成功")
     else:
-        return render(request, "RGPY/StudentInfo.html", locals())
+        return render(request, "RGPY/student/StudentInfo.html", locals())
 
 
 @login_required(login_url='/login/')
@@ -445,3 +445,66 @@ def task_info(request, taskid):
         return redirect(reverse('RGPY:task_list'))
     else:
         return render(request, 'RGPY/Department/task_info.html', locals())
+
+
+@login_required(login_url='/login/')
+def task_department_list(request):
+    # 用户所在的系别
+    student_depar = request.user.ouruser.student.banji.department
+    # print(student_depar)
+    # 找出自己所在系的全部管理员
+    depar_admin = DepartmentManage.objects.filter(department=student_depar)
+    # print(depar_admin)
+    task_list = Mission.objects.filter(promulgator__in=depar_admin)
+    # print(task_list)
+    return render(request, "RGPY/student/task_list.html", locals())
+
+
+@login_required(login_url='/login/')
+def task_college_list(request):
+    pass
+
+
+@login_required(login_url='/login/')
+def task_student_info(request, taskid):
+    mission = Mission.objects.get(id=taskid)
+    return render(request, 'RGPY/student/task_info.html', locals())
+
+
+@login_required(login_url='/login/')
+def task_student_baoming(request, taskid):
+    try:
+        s = request.user.ouruser.student
+        _task = Mission.objects.get(pk=taskid)
+        TaskApply.objects.create(student=s, task=_task)
+        NEWS.objects.create(
+            reader=s,
+            info="您已报名成功:%s,请耐心等待通知" % (_task.desc),
+        )
+        return HttpResponse("1")
+    except Exception as e:
+        print(e)
+        return HttpResponse("-1")
+
+
+@login_required(login_url='/login/')
+def news(request):
+    u = request.user.ouruser
+    try:
+        news_list = NEWS.objects.filter(reader=u, is_read=False)
+    except:
+        print(e)
+    finally:
+        return render(request, 'RGPY/student/new.html', locals())
+
+
+@login_required(login_url='/login/')
+def news_reader(request, newid):
+    try:
+        n = NEWS.objects.get(pk=newid)
+        n.is_read = True
+        n.save()
+    except Exception as e:
+        pass
+    finally:
+        return HttpResponse("ok")

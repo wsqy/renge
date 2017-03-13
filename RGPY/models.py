@@ -144,3 +144,14 @@ class TaskApply(models.Model):
     task = models.ForeignKey(Mission, verbose_name="任务")
     is_approval = models.BooleanField(verbose_name="是否批准", default=False)
     add_score = models.BooleanField(verbose_name="是否增加时长", default=False)
+
+    class Meta:
+        unique_together = (("student", "task"),)
+
+
+class NEWS(models.Model):
+    reader = models.ForeignKey(OurUser, verbose_name="读者")
+    info = models.TextField(verbose_name="消息")
+    link = models.CharField(max_length=100, verbose_name="链接", blank=True)
+    time = models.DateField(verbose_name="时间", default=timezone.now)
+    is_read = models.BooleanField(verbose_name="是否已读", default=False)

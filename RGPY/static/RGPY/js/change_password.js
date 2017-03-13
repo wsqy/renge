@@ -18,6 +18,7 @@ $(function(){
                 }
                 else {
                     flag = true
+                    $(".alert-dismissible").hidden();
                 }
             },
         });

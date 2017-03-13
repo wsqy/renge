@@ -1,0 +1,28 @@
+{% extends 'RGPY/student/StudentBase.html' %}
+{% load staticfiles %}
+
+
+{% block body %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>任务描述</th>
+        <th>需要人数</th>
+        <th>开始报名时间</th>
+        <th>时长</th>
+        <th>点击查看详情</th>
+    </tr>
+    {% for task in task_list %}
+        <tr id="{{ task.id }}">
+            <td><a href=" {% url 'RGPY:task_student_info' task.id %}">{{task.desc}}</a></td>
+            <td>{{task.required}}</td>
+            <td>{{task.start_time}}</td>
+            <td>{{task.score}}</td>
+
+            <td><a href=" {% url 'RGPY:task_student_info' task.id %}">点击查看详情</a></td>
+        </tr>
+    {% endfor %}
+  </table>
+  </div>
+
+{% endblock %}
