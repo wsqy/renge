@@ -155,3 +155,6 @@ class NEWS(models.Model):
     link = models.CharField(max_length=100, verbose_name="链接", blank=True)
     time = models.DateField(verbose_name="时间", default=timezone.now)
     is_read = models.BooleanField(verbose_name="是否已读", default=False)
+
+    class Meta:
+        ordering = ('-id', )

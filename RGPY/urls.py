@@ -54,6 +54,8 @@ urlpatterns = [
         url(r'^list/$', views.task_list, name='task_list'),
         url(r'^(?P<taskid>[0-9]+)/del/$', views.task_delete, name='task_delete'),
         url(r'^(?P<taskid>[0-9]+)/info/$', views.task_info, name='task_info'),
+        url(r'^agree/(?P<taskid>[0-9]+)/(?P<studentid>[0-9]+)/$', views.agree_apply, name='agree_apply'),
+        url(r'^addScore/(?P<taskid>[0-9]+)/(?P<studentid>[0-9]+)/$', views.addScore, name='addScore'),
 
         url(r'^student/', include([
             url(r'^list/department/$', views.task_department_list, name='task_department_list'),

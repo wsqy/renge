@@ -273,7 +273,7 @@ def banji_list(request):
 
 @login_required(login_url='/login/')
 def banji_info(request, banji):
-    student_list = Banji.objects.get(pk=banji).student_set.all()
+    student_list = Banji.objects.get(id=banji).student_set.all()
     print(student_list)
     return render(request, 'RGPY/Department/student_list.html', locals())
 
@@ -283,7 +283,7 @@ def banji_delete(request, banji):
     print(request.user.ouruser.level)
     if int(request.user.ouruser.level) == 2:
         print("班级%s" % (banji,))
-        Banji.objects.filter(pk=banji).delete()
+        Banji.objects.filter(id=banji).delete()
         result = 1
     else:
         result = 0
@@ -326,7 +326,7 @@ def student_reset_admin(request, student):
     print(request.user.ouruser.level)
     if int(request.user.ouruser.level) == 2:
         print("学生%s" % (student,))
-        u = Student.objects.get(pk=student)
+        u = Student.objects.get(id=student)
         is_admin = not u.is_banji_admin
         u.is_banji_admin = is_admin
         u.save()
@@ -339,7 +339,7 @@ def student_reset_admin(request, student):
 @login_required(login_url='/login/')
 def user_del(request, userId):
     try:
-        u = OurUser.objects.get(pk=userId)
+        u = OurUser.objects.get(id=userId)
         if int(u.level) < int(request.user.ouruser.level):
             u.delete()
             result = 1
@@ -444,7 +444,70 @@ def task_info(request, taskid):
         mission.save()
         return redirect(reverse('RGPY:task_list'))
     else:
+        try:
+            task_list = TaskApply.objects.filter(task_id=taskid)
+            student_list = []
+            for task in task_list:
+                student = {}
+                s = Student.objects.get(id=task.student_id)
+                student['username'] = s.username
+                student['id'] = s.id
+                student['first_name'] = s.first_name
+                student['banji'] = s.banji
+                student['department'] = s.banji.department
+                student['phone'] = s.phone
+                student['email'] = s.email
+                student['is_approval'] = task.is_approval
+                student_list.append(student)
+        except Exception as e:
+            print(e)
         return render(request, 'RGPY/Department/task_info.html', locals())
+
+
+@login_required(login_url='/login/')
+def agree_apply(request, taskid, studentid):
+    try:
+        task = TaskApply.objects.get(task_id=taskid)
+        task.is_approval = not task.is_approval
+        approval = task.is_approval
+        _u = OurUser.objects.get(id=studentid)
+        _m = Mission.objects.get(id=taskid)
+        if approval:
+            _info = '您申请的任务%s已经通过申请,请务必在%s完成任务' % (_m, _m.task_time)
+        else:
+            _info = '您申请的任务%s,没有通过申请,请选择别的任务' % (_m)
+        NEWS.objects.create(reader=_u, info=_info)
+        task.save()
+        if approval:
+            return HttpResponse('1')
+        else:
+            return HttpResponse('0')
+    except Exception as e:
+        print(e)
+        return HttpResponse('-1')
+
+
+@login_required(login_url='/login/')
+def addScore(request, taskid, studentid):
+    try:
+        task = TaskApply.objects.get(task_id=taskid)
+        if task.add_score:
+            return HttpResponse("0")
+        task.add_score = True
+        _u = Student.objects.get(id=studentid)
+        _m = Mission.objects.get(id=taskid)
+        _u.score += _m.score
+
+        _info = '您完成的任务:%s已经增加了时长,您现在的总时长为:%s' % (_m, _u.score)
+
+        NEWS.objects.create(reader=_u, info=_info)
+        task.save()
+        _u.save()
+
+        return HttpResponse('1')
+    except Exception as e:
+        print(e)
+        return HttpResponse('-1')
 
 
 @login_required(login_url='/login/')
@@ -467,15 +530,19 @@ def task_college_list(request):
 
 @login_required(login_url='/login/')
 def task_student_info(request, taskid):
-    mission = Mission.objects.get(id=taskid)
-    return render(request, 'RGPY/student/task_info.html', locals())
+    try:
+        mission = Mission.objects.get(id=taskid)
+    except Exception as e:
+        print(e)
+    finally:
+        return render(request, 'RGPY/student/task_info.html', locals())
 
 
 @login_required(login_url='/login/')
 def task_student_baoming(request, taskid):
     try:
         s = request.user.ouruser.student
-        _task = Mission.objects.get(pk=taskid)
+        _task = Mission.objects.get(id=taskid)
         TaskApply.objects.create(student=s, task=_task)
         NEWS.objects.create(
             reader=s,
@@ -501,7 +568,7 @@ def news(request):
 @login_required(login_url='/login/')
 def news_reader(request, newid):
     try:
-        n = NEWS.objects.get(pk=newid)
+        n = NEWS.objects.get(id=newid)
         n.is_read = True
         n.save()
     except Exception as e:
