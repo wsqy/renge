@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect, get_list_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, Manage, OurUser, Mission, COS, TaskApply, NEWS
+from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, \
+    Manage, OurUser, Mission, COS, TaskApply, NEWS, TaskList
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, ChangePasswordForm, CreateBanjiForm
+from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, \
+    ChangePasswordForm, CreateBanjiForm
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
+
+from RGPY import Util
+from RGPY.Notice import NOTICE
 
 
 # Create your views here.
@@ -455,6 +460,7 @@ def task_info(request, taskid):
                 student['first_name'] = s.first_name
                 student['banji'] = s.banji
                 student['department'] = s.banji.department
+                student['score'] = s.score
                 student['phone'] = s.phone
                 student['email'] = s.email
                 student['is_approval'] = task.is_approval
@@ -472,11 +478,10 @@ def agree_apply(request, taskid, studentid):
         approval = task.is_approval
         _u = OurUser.objects.get(id=studentid)
         _m = Mission.objects.get(id=taskid)
-        if approval:
-            _info = '您申请的任务%s已经通过申请,请务必在%s完成任务' % (_m, _m.task_time)
-        else:
-            _info = '您申请的任务%s,没有通过申请,请选择别的任务' % (_m)
-        NEWS.objects.create(reader=_u, info=_info)
+
+        notice = NOTICE(user=_u, task=_m, type=2, approval=approval)
+        notice.send_notice()
+
         task.save()
         if approval:
             return HttpResponse('1')
@@ -497,13 +502,31 @@ def addScore(request, taskid, studentid):
         _u = Student.objects.get(id=studentid)
         _m = Mission.objects.get(id=taskid)
         _u.score += _m.score
+        r = Util.get_user_info(request)
 
-        _info = '您完成的任务:%s已经增加了时长,您现在的总时长为:%s' % (_m, _u.score)
-
-        NEWS.objects.create(reader=_u, info=_info)
+        if r.get('type', '1') == '1':
+            if request.user.ouruser.student.is_banji_admin:
+                _task_type = "班级任务"
+            else:
+                _task_type = "个人任务"
+        elif r.get('type', '1') == '2':
+            _task_type = "系任务"
+        elif r.get('type', '1') == '3':
+            _task_type = "院任务"
+        else:
+            _task_type = "不确定的任务类型"
+        shen_he_ren = OurUser.objects.get(id=_m.promulgator.id)
+        TaskList.objects.create(
+            name=_m,
+            task_type=_task_type,
+            student=_u,
+            review=shen_he_ren,
+        )
         task.save()
         _u.save()
-
+        # 发送通知
+        notice = NOTICE(user=_u, task=_m, type=3)
+        notice.send_notice()
         return HttpResponse('1')
     except Exception as e:
         print(e)
@@ -542,12 +565,13 @@ def task_student_info(request, taskid):
 def task_student_baoming(request, taskid):
     try:
         s = request.user.ouruser.student
-        _task = Mission.objects.get(id=taskid)
-        TaskApply.objects.create(student=s, task=_task)
-        NEWS.objects.create(
-            reader=s,
-            info="您已报名成功:%s,请耐心等待通知" % (_task.desc),
-        )
+        _m = Mission.objects.get(id=taskid)
+        TaskApply.objects.create(student=s, task=_m)
+
+        # 发送通知
+        notice = NOTICE(user=s, task=_m, type=1)
+        notice.send_notice()
+
         return HttpResponse("1")
     except Exception as e:
         print(e)

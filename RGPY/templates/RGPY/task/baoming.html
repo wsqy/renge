@@ -55,6 +55,7 @@
         <th>姓名</th>
         <th>班级</th>
         <th>系别</th>
+        <th>已有时长</th>
         <th>手机号码</th>
         <th>邮箱</th>
         <th>是否批准申请</th>
@@ -66,6 +67,7 @@
             <td>{{student.first_name}}</td>
             <td>{{student.banji}}</td>
             <td>{{student.department}}</td>
+            <td>{{student.score}}</td>
             <td>{{student.phone}}</td>
             <td>{{student.email}}</td>
             <td><input class="my_checkbox" type="checkbox" {% if student.is_approval%}checked {%endif%} /></td>

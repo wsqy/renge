@@ -126,7 +126,7 @@ class Mission(models.Model):
     start_time = models.DateField(verbose_name="开始报名时间", default=timezone.now)
     end_time = models.DateField(verbose_name="报名结束时间", default=timezone.now)
     task_time = models.DateField(verbose_name="任务完成时间",default=timezone.now, )
-    score = models.PositiveSmallIntegerField(verbose_name="时长", default=2)
+    score = models.PositiveSmallIntegerField(verbose_name="时长", default=2, blank=True)
     remark = models.TextField(verbose_name="备注")
     flag = models.BooleanField(verbose_name="是否删除", default=False)
 
@@ -158,3 +158,17 @@ class NEWS(models.Model):
 
     class Meta:
         ordering = ('-id', )
+
+
+class TaskList(models.Model):
+    name = models.CharField(max_length=50, verbose_name="任务名称",)
+    task_type = models.CharField(max_length=20, verbose_name="任务类型",)
+    student = models.ForeignKey(Student, verbose_name="获得时长的学生", related_name="student_id")
+    review = models.ForeignKey(OurUser, verbose_name="审核人", related_name="ouruser_id")
+    taskDate = models.DateField(verbose_name="获得分值的时间", auto_now_add=True)
+
+
+class AddScoreApply(models.Model):
+    student = models.ForeignKey(Student, verbose_name="申请人", )
+    score = models.PositiveSmallIntegerField(verbose_name="申请的时长", default=2, blank=True)
+    apply_time = models.DateTimeField(verbose_name="提出申请的时间", auto_now_add=True)
