@@ -23,6 +23,9 @@ class NOTICE:
         elif self._infotype == 3:
             # 任务完成通知, 初始化还需要传入  任务对象
             self._info = '您完成的任务:%s已经增加了时长,您现在的总时长为:%s' % (self.task, self.user.score)
+        elif self._infotype == 4:
+            # 自申请任务通知
+            self._info = '您申请的加分任务:%s 已经提交成功，请耐心等候审核' % (self.apply.desc,)
         else:
             pass
 

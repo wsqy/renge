@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_list_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from RGPY.models import Student, Banji, CollegeManage, DepartmentManage, \
-    Manage, OurUser, Mission, COS, TaskApply, NEWS, TaskList
+    Manage, OurUser, Mission, COS, TaskApply, NEWS, TaskList, AddScoreApply
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from RGPY.forms import CreateCollegeForm, CreateDepartmentForm, \
@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 
 from RGPY import Util
 from RGPY.Notice import NOTICE
+from datetime import datetime
 
 
 # Create your views here.
@@ -599,3 +600,33 @@ def news_reader(request, newid):
         pass
     finally:
         return HttpResponse("ok")
+
+
+@login_required(login_url='/login/')
+def apply_authentication(request):
+    if request.method == "POST":
+        _u = request.user.ouruser.student
+        asa = AddScoreApply()
+        asa.student = _u
+        asa.desc = request.POST.get('desc', '')
+        asa.score = int(request.POST.get('score', 0))
+        asa.apply_time = datetime.now()
+        asa.remark = request.POST.get('remark', '')
+        asa.save()
+        print(asa.id)
+
+        # 发送通知
+        notice = NOTICE(user=_u, apply=asa, type=4)
+        notice.send_notice()
+
+        return redirect(reverse('RGPY:apply_authentication_info', kwargs={"applyid": asa.id, }))
+    else:
+        return render(request, 'RGPY/student/apply_authentication.html', locals())
+
+
+@login_required(login_url='/login/')
+def apply_authentication_info(request, applyid):
+    if request.method == "POST":
+        return HttpResponse("hello")
+    else:
+        return HttpResponse("hello")

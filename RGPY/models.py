@@ -170,5 +170,8 @@ class TaskList(models.Model):
 
 class AddScoreApply(models.Model):
     student = models.ForeignKey(Student, verbose_name="申请人", )
+    desc = models.CharField(max_length=50, verbose_name="任务名", default="")
     score = models.PositiveSmallIntegerField(verbose_name="申请的时长", default=2, blank=True)
     apply_time = models.DateTimeField(verbose_name="提出申请的时间", auto_now_add=True)
+    flag = models.NullBooleanField(verbose_name="是否被批准", blank=True)
+    remark = models.TextField(verbose_name="备注", default="")

@@ -62,7 +62,9 @@ urlpatterns = [
             url(r'^list/college/$', views.task_college_list, name='task_college_list'),
             url(r'^(?P<taskid>[0-9]+)/info/$', views.task_student_info, name='task_student_info'),
             url(r'^(?P<taskid>[0-9]+)/baoming/$', views.task_student_baoming, name='task_student_baoming'),
-
+            url(r'^apply/authentication$', views.apply_authentication, name='apply_authentication'),
+            url(r'^apply/authentication/info/(?P<applyid>[0-9]+)/', views.apply_authentication_info, name='apply_authentication_info'),
+  
         ])),
     ])),
 
