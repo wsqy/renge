@@ -627,6 +627,79 @@ def apply_authentication(request):
 @login_required(login_url='/login/')
 def apply_authentication_info(request, applyid):
     if request.method == "POST":
-        return HttpResponse("hello")
+        authentication = AddScoreApply.objects.get(id=applyid)
+        authentication.desc = request.POST.get('desc', '')
+        authentication.score = int(request.POST.get('score', 0))
+        authentication.remark = request.POST.get('remark', '')
+        authentication.save()
+
+        # 发送通知
+        _u = request.user.ouruser.student
+        notice = NOTICE(user=_u, apply=authentication, type=5)
+        notice.send_notice()
     else:
-        return HttpResponse("hello")
+        try:
+            authentication = AddScoreApply.objects.get(id=applyid)
+        except Exception as e:
+            print(e)
+    return render(request, 'RGPY/student/apply_authentication_info.html', locals())
+
+
+@login_required(login_url='/login/')
+def my_apply_authentication_list(request):
+    try:
+        authentication_list = AddScoreApply.objects.filter(student=request.user.ouruser.student)
+    except Exception as e:
+        authentication_list = []
+    finally:
+        return render(request, 'RGPY/student/apply_authentication_list.html', locals())
+
+
+@login_required(login_url='/login/')
+def authentication_list(request):
+    try:
+        banji = request.user.ouruser.student.banji
+        authentication_list = AddScoreApply.objects.filter(student__banji=banji, flag=None)
+    except Exception as e:
+        authentication_list = []
+    finally:
+        return render(request, 'RGPY/student/banji/apply_authentication_list.html', locals())
+
+
+@login_required(login_url='/login/')
+def authentication_agree(request, authentication_id, agree_id):
+    try:
+        _a = AddScoreApply.objects.get(id=authentication_id)
+        agree_id = int(agree_id)
+        if agree_id == 1:
+            _a.flag = True
+            _t = TaskList.objects.create(
+                name=_a.desc,
+                task_type="个人任务",
+                student=_a.student,
+                review=request.user.ouruser,
+                taskDate=datetime.now()
+            )
+        else:
+            _a.flag = False
+        _a.save()
+
+        # 发送通知
+        notice = NOTICE(_a.student, apply=_a, agree_id=agree_id, type=6, level=[1, 2, 3])
+        notice.send_notice()
+
+    except Exception as e:
+        print(e)
+    finally:
+        return HttpResponse("")
+
+
+@login_required(login_url='/login/')
+def authentication_batch(request):
+    try:
+        authentication_list = AddScoreApply.objects.filter(student=request.user.ouruser.student)
+    except Exception as e:
+        authentication_list = []
+    finally:
+        print(authentication_list)
+        return render(request, 'RGPY/student/apply_authentication_list.html', locals())

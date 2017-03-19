@@ -1,0 +1,36 @@
+{% extends 'RGPY/student/StudentBase.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+<script>
+
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>任务描述</th>
+        <th>申请的时长</th>
+        <th>提出申请的时间</th>
+        <th>是否被批准</th>
+        <th>点击查看详情</th>
+    </tr>
+    {% for authentication in authentication_list %}
+        <tr id="{{ authentication.id }}">
+            <td><a href=" {% url 'RGPY:apply_authentication_info' authentication.id %}">{{authentication.desc}}</a></td>
+            <td>{{authentication.score}}</td>
+            <td>{{authentication.apply_time}}</td>
+            <td>{{authentication.flag | default_if_none:"false"  | default:"false"}}</td>
+            <td><a href=" {% url 'RGPY:apply_authentication_info' authentication.id %}">点击查看详情</a></td>
+
+        </tr>
+        {% empty %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <strong>您暂未申请个人认证任务</strong>
+            </div>
+    {% endfor %}
+  </table>
+  </div>
+{% endblock %}

@@ -42,6 +42,11 @@ $(function(){
             <td>{{task.score}}</td>
             <td><input type="checkbox" name="task_delete" {% if task.flag %}checked {%endif%} /></td>
         </tr>
+    {% empty %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>暂时发布任务</strong>
+    </div>
     {% endfor %}
   </table>
   </div>

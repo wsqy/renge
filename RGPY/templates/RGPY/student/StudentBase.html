@@ -1,6 +1,6 @@
 {% extends 'RGPY/base.html' %}
 {% block left %}
-  <ul class="nav" id="side-menu1">
+  <ul class="nav" id="side-menu">
     <li>
         <a href="{% url 'RGPY:user_info'%}"><i class="fa fa-user fa-fw"></i> 学生:&nbsp;{{ request.user.ouruser.student.get_short_name }}<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
@@ -49,21 +49,23 @@
                 <a href="{% url 'RGPY:apply_authentication'%}">申请时长认证</a>
             </li>
             <li>
-                <a href="/">我的申请</a>
+                <a href="{% url 'RGPY:my_apply_authentication_list'%}">我的申请</a>
             </li>
         </ul>
     </li>
+{% if request.user.ouruser.student.is_banji_admin %}
     <li>
         <a href="#"><i class="fa fa-user fa-fw"></i> 班级管理<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li>
-                <a href=" ">个人时长认证</a>
+                <a href="{% url 'RGPY:authentication_list'%}">个人时长认证</a>
             </li>
             <li>
-                <a href="/">团体时长认证</a>
+                <a href="{% url 'RGPY:authentication_batch'%}">团体时长认证</a>
             </li>
         </ul>
     </li>
+{% endif %}
   </ul>
 
 {% endblock %}

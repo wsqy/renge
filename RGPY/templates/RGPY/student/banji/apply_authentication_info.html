@@ -3,17 +3,21 @@
 {% block custom_static %}
 <script>
 $(function(){
-    // 一开始 提交修改 按钮是隐藏的  只有 修改申请按钮
-    $("[name='sumbit_edit']").hide();
+    // 当点击 通过 按钮时
+    $("[name='_agree']").click(function(){
+        var authentication = $(this).parents("tr");
+        var id = authentication.attr("id");
+        $.ajax({url:"/task/student/authentication/agree/"+id+"/1", success:function(result){
 
-    // 当点击 修改申请 按钮时
-    $("[name='task_edit']").click(function(){
-        // 首先显示 提交修改 按钮
-        $("[name='sumbit_edit']").show();
-        // 隐藏自己(修改申请按钮)
-        $(this).hide();
-        // 将表单设置为可编辑状态
-        $(".taskInfo").attr('disabled', false);
+        }});
+    });
+    // 当点击 拒绝 按钮时
+    $("[name='_pass']").click(function(){
+        var authentication = $(this).parents("tr");
+        var id = authentication.attr("id");
+        $.ajax({url:"/task/student/authentication/agree/"+id+"/2", success:function(result){
+
+        }});
     });
 });
 </script>
@@ -42,15 +46,11 @@ $(function(){
       </div>
     </div>
 
-    <div class="form-group edit_userInfo">
-        <div class="col-sm-offset-2 col-sm-6">
-          <button type="button" class="btn btn-primary" name="task_edit">修改任务</button>
-        </div>
-    </div>
     <div class="form-group submit_edit">
         <div class="col-sm-offset-2 col-sm-6">
           <button type="submit" class="btn btn-primary" name="sumbit_edit">提交修改</button>
         </div>
     </div>
+
 </form>
 {% endblock %}

@@ -63,8 +63,13 @@ urlpatterns = [
             url(r'^(?P<taskid>[0-9]+)/info/$', views.task_student_info, name='task_student_info'),
             url(r'^(?P<taskid>[0-9]+)/baoming/$', views.task_student_baoming, name='task_student_baoming'),
             url(r'^apply/authentication$', views.apply_authentication, name='apply_authentication'),
+            url(r'^apply/authentication/list$', views.my_apply_authentication_list, name='my_apply_authentication_list'),
             url(r'^apply/authentication/info/(?P<applyid>[0-9]+)/', views.apply_authentication_info, name='apply_authentication_info'),
-  
+
+            url(r'^authentication/list/', views.authentication_list, name='authentication_list'),
+            url(r'^authentication/agree/(?P<authentication_id>[0-9]+)/(?P<agree_id>[0-9])/$', views.authentication_agree, name='authentication_agree'),
+            url(r'^authentication/batch/', views.authentication_batch, name='authentication_batch'),
+
         ])),
     ])),
 

@@ -1,0 +1,60 @@
+{% extends 'RGPY/student/StudentBase.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+<script>
+$(function(){
+
+    // 当点击 通过 按钮时
+    $("[name='agree_apply']").click(function(){
+        var authentication = $(this).parents("tr");
+        var id = authentication.attr("id");
+        var urls = "/task/student/authentication/agree/"+id+"/1";
+        $.ajax({url: urls, success:function(result){
+
+        }});
+        window.location.reload();
+    });
+    // 当点击 拒绝 按钮时
+    $("[name='pass_apply']").click(function(){
+        var authentication = $(this).parents("tr");
+        var id = authentication.attr("id");
+        $.ajax({url:"/task/student/authentication/agree/"+id+"/2", success:function(result){
+
+        }});
+        window.location.reload();
+    });
+});
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>申请人</th>
+        <th>任务描述</th>
+        <th>申请的时长</th>
+        <th>提出申请的时间</th>
+        <th>是否被批准</th>
+        <th>通过</th>
+        <th>拒绝</th>
+    </tr>
+    {% for authentication in authentication_list %}
+        <tr id="{{ authentication.id }}">
+            <td> {{authentication.student}} </td>
+            <td> {{authentication.desc}} </td>
+            <td>{{authentication.score}}</td>
+            <td>{{authentication.apply_time}}</td>
+            <td>{{authentication.flag | default_if_none:"false"  | default:"false"}}</td>
+            <th><button type="button" class="btn btn-primary btn-sm" name="agree_apply">通过</button></th>
+            <th><button type="button" class="btn btn-primary btn-sm" name="pass_apply">拒绝</button></th>
+        </tr>
+        {% empty %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <strong>您所在的班级暂未有申请个人认证任务</strong>
+            </div>
+    {% endfor %}
+  </table>
+  </div>
+{% endblock %}

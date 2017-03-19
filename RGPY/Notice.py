@@ -2,9 +2,10 @@ from RGPY.models import NEWS
 
 
 class NOTICE:
-    def __init__(self, user, type=1, *argv, **kw):
+    def __init__(self, user, type=1, level=[1], *argv, **kw):
         self.user = user
         self._infotype = type
+        self._level = level
 
         for k, v in kw.items():
             setattr(self, k, v)
@@ -26,6 +27,15 @@ class NOTICE:
         elif self._infotype == 4:
             # 自申请任务通知
             self._info = '您申请的加分任务:%s 已经提交成功，请耐心等候审核' % (self.apply.desc,)
+        elif self._infotype == 5:
+            # 自申请任务修改通知
+            self._info = '您申请的加分任务:%s 修改已经提交成功，请耐心等候审核' % (self.apply.desc,)
+        elif self._infotype == 6:
+            # 自申请任务  通过 拒绝通知
+            if self.agree_id == 1:
+                self._info = '您申请的加分任务:%s 已经成功加分' % (self.apply.desc,)
+            else:
+                self._info = '您申请的加分任务:%s 被管理员拒绝, 如有疑问 请联系班级管理员' % (self.apply.desc,)
         else:
             pass
 
@@ -40,6 +50,9 @@ class NOTICE:
 
     def send_notice(self):
         self.get_info()
-        self.mess_send()
-        self.email_send()
-        self.phone_send()
+        if 1 in self._level:
+            self.mess_send()
+        if 2 in self._level:
+            self.email_send()
+        if 3 in self._level:
+            self.phone_send()
