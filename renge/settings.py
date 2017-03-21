@@ -142,3 +142,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static").replace('\\', '/')
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media").replace('\\', '/')
+
+
+# 发送邮件配置(qq邮箱)
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_HOST_USER = '1254345521@qq.com'
+EMAIL_HOST_PASSWORD = 'zccldapvfikfjbic'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+# 短信配置
+MES_APPKEY = "23709431"
+MES_SECRET = "3fda9b9c1f43307cbb4c36f3810fcaf4"
+MES_URL = "https://eco.taobao.com/router/rest"
+SMS_FREE_SIGN_NAME = "人格培养管理平台"

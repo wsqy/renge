@@ -691,7 +691,7 @@ def authentication_agree(request, authentication_id, agree_id):
     except Exception as e:
         print(e)
     finally:
-        return HttpResponse("")
+        return redirect(request.META.get("HTTP_REFERER", '/'))
 
 
 @login_required(login_url='/login/')

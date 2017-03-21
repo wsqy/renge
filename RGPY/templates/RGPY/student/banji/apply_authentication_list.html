@@ -3,26 +3,8 @@
 {% block custom_static %}
 <script>
 $(function(){
+    // var urls = "/task/student/authentication/agree/"+id+"/1";
 
-    // 当点击 通过 按钮时
-    $("[name='agree_apply']").click(function(){
-        var authentication = $(this).parents("tr");
-        var id = authentication.attr("id");
-        var urls = "/task/student/authentication/agree/"+id+"/1";
-        $.ajax({url: urls, success:function(result){
-
-        }});
-        window.location.reload();
-    });
-    // 当点击 拒绝 按钮时
-    $("[name='pass_apply']").click(function(){
-        var authentication = $(this).parents("tr");
-        var id = authentication.attr("id");
-        $.ajax({url:"/task/student/authentication/agree/"+id+"/2", success:function(result){
-
-        }});
-        window.location.reload();
-    });
 });
 </script>
 {% endblock %}
@@ -46,8 +28,9 @@ $(function(){
             <td>{{authentication.score}}</td>
             <td>{{authentication.apply_time}}</td>
             <td>{{authentication.flag | default_if_none:"false"  | default:"false"}}</td>
-            <th><button type="button" class="btn btn-primary btn-sm" name="agree_apply">通过</button></th>
-            <th><button type="button" class="btn btn-primary btn-sm" name="pass_apply">拒绝</button></th>
+            <th><a href="{% url 'RGPY:authentication_agree' authentication.id 1 %}" class="btn btn-primary btn-sm" role="button">通过</a></th>
+            <th><a href="{% url 'RGPY:authentication_agree' authentication.id 2 %}" class="btn btn-primary btn-sm" role="button">拒绝</a></th>
+
         </tr>
         {% empty %}
             <div class="alert alert-warning alert-dismissible" role="alert">
