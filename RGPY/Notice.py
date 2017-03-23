@@ -87,6 +87,12 @@ class NOTICE:
             self._info = '您的密码已成功修改,请妥善保管'
             req.sms_param = ""
             req.sms_template_code = "SMS_56610389"
+        elif self._infotype == 9:
+            # 班级团体任务完成   	SMS_57790020
+            self._mes_type = "班级团体任务完成通知"
+            self._info = '您完成的班级团体任务:%s 已经成功增加时长' % (self.desc)
+            req.sms_param = {"task_name": self.desc}
+            req.sms_template_code = "SMS_57790020"
         else:
             pass
 
@@ -117,13 +123,9 @@ class NOTICE:
 
     def send_notice(self):
         self.get_info()
-        print(4)
         if 1 in self._level:
-            print(5)
             self.mess_send()
         if 2 in self._level:
-            print(6)
             self.email_send()
         if 3 in self._level:
-            print(7)
             self.phone_send()

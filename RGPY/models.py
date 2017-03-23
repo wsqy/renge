@@ -166,6 +166,7 @@ class TaskList(models.Model):
     student = models.ForeignKey(Student, verbose_name="获得时长的学生", related_name="student_id")
     review = models.ForeignKey(OurUser, verbose_name="审核人", related_name="ouruser_id")
     taskDate = models.DateField(verbose_name="获得分值的时间", auto_now_add=True)
+    score = models.PositiveSmallIntegerField(verbose_name="获得时长", default=2)
 
 
 class AddScoreApply(models.Model):

@@ -26,9 +26,25 @@
 
     </script>
     <style>
-        .excelupload{
-            float: right;
-            margin-top: -21px;
+        .btn-file {  /*  上传按钮*/
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity = 0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
         }
     </style>
 {% endblock %}
@@ -69,11 +85,15 @@
     <p>表中数据格式为：学号 姓名 邮箱(可以为空) 手机号(可以为空) 是否是班级管理员(注1) 班级</p>
     <p>注1:是班级管理员的学生在此处设置为1,其余的则认为是非班级管理员，可以稍后设置</p>
     <p>注2:如果不了解上传的格式要求可以点击 下载demo 按钮 尝试一下</p>
-    <a class="btn btn-primary btn-lg" href="/media/demo/13网工1班.xls" role="button">下载demo</a>
-    <form class="excelupload" action="{% url 'RGPY:student_list_upload'%}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="excel">
-        <input class="btn btn-primary btn-lg" name="uploadtable" type="submit" value="上传">
-    </form>
+    <div class="form-group">
+        <a class="btn btn-primary btn-lg col-sm-2 control-label" href="/media/demo/13网工1班.xls" role="button">下载demo</a>
+        <form class="excelupload" action="{% url 'RGPY:student_list_upload'%}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <span class="btn btn-lg btn-success btn-file col-sm-offset-5 col-sm-2 control-label"> 选择学生表
+               <input type="file" name="excel" value="" id=""  />
+            </span>
+            <input class="btn btn-primary btn-lg col-sm-offset-1 col-sm-2 control-label" name="uploadtable" type="submit" value="上传">
+        </form>
+    </div>
 </div>
 {% endblock %}

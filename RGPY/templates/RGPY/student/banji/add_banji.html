@@ -1,0 +1,81 @@
+{% extends 'RGPY/student/StudentBase.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+<script>
+$(function(){
+
+});
+</script>
+<style type="text/css">
+.btn-file {  /*  上传按钮*/
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity = 0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button name="" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>{{mes}}</strong>
+</div>
+<div class="jumbotron">
+    <h1>导入团体任务</h1>
+    <p>快速给每一位参与活动的学生增加时长</p>
+    <p>上传的表格命名格式: 任务名.xls</p>
+    <p>表中数据格式为：学号</p>
+    <form action="" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_desc" class="col-sm-2 control-label">任务名称</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control taskInfo" id="id_desc" name="desc" required="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="id_score" class="col-sm-2 control-label">时长</label>
+          <div class="col-sm-7">
+            <input type="number" class="form-control taskInfo" id="id_score" name="score" required="" min="1">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_remark" class="col-sm-2 control-label">备注</label>
+          <div class="col-sm-7">
+            <textarea class="form-control taskInfo" rows="5" id="id_remark" name="remark"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_remark" class="col-sm-2 control-label">上传</label>
+            <div class="col-sm-7">
+                <span class="btn btn-success btn-file"> 选择学生表
+                   <input type="file" name="excel" value="" id=""  />
+                </span>
+            </div>
+      </div>
+        <div class="form-group edit_userInfo">
+            <div class="col-sm-offset-2 col-sm-6">
+              <button type="submmit" class="btn btn-primary" name="tuanti_task_upload">确认上传</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

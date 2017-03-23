@@ -696,10 +696,40 @@ def authentication_agree(request, authentication_id, agree_id):
 
 @login_required(login_url='/login/')
 def authentication_batch(request):
-    try:
-        authentication_list = AddScoreApply.objects.filter(student=request.user.ouruser.student)
-    except Exception as e:
-        authentication_list = []
-    finally:
-        print(authentication_list)
-        return render(request, 'RGPY/student/apply_authentication_list.html', locals())
+    if request.method == "POST":
+        desc = request.POST.get("desc", "")
+        score = int(request.POST.get("score", 0))
+        review_id = request.user.ouruser.id
+        print(request.FILES)
+        files = request.FILES.get('excel')
+        print(files)
+        import os
+        import xlrd
+        wb = xlrd.open_workbook(filename=None, file_contents=request.FILES['excel'].read())
+        # 关键点在于这里
+        table = wb.sheets()[0]
+        student_list = []
+        for i in range(1, table.nrows):
+            try:
+                stu_no = str(int(table.row_values(i)[0]))
+                print(stu_no)
+                u = Student.objects.get(username=stu_no)
+                TaskList.objects.create(
+                    name=desc,
+                    task_type="班级任务",
+                    taskDate=datetime.now(),
+                    review_id=review_id,
+                    score=score,
+                    student_id=u.id,
+                )
+                u.score += score
+                u.save()
+                # 发送通知
+                notice = NOTICE(user=u, desc=desc, type=9, level=[1, 2, 3])
+                notice.send_notice()
+            except Exception as e:
+                pass
+        mes = "班级团体任务成功导入"
+        return render(request, 'RGPY/student/banji/add_banji.html', locals())
+    else:
+        return render(request, 'RGPY/student/banji/add_banji.html', locals())
