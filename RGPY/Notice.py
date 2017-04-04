@@ -14,6 +14,9 @@ req.sms_free_sign_name = settings.SMS_FREE_SIGN_NAME
 
 class NOTICE:
     def __init__(self, user, type=1, level=[1], *argv, **kw):
+        """
+        实例化NOTICE类的基本配置信息
+        """
         self.user = user
         self._infotype = type
         self._level = level
@@ -23,6 +26,9 @@ class NOTICE:
             setattr(self, k, v)
 
     def get_info(self):
+        """
+        获取消息的信息
+        """
         if self._infotype == 1:
             # 任务申请通知 SMS_56550520, 初始化还需要传入  任务对象
             self._mes_type = "任务申请通知"
@@ -92,14 +98,20 @@ class NOTICE:
             self._mes_type = "班级团体任务完成通知"
             self._info = '您完成的班级团体任务:%s 已经成功增加时长' % (self.desc)
             req.sms_param = {"task_name": self.desc}
-            req.sms_template_code = "SMS_57790020"
+            req.sms_template_code = "SMS_60085872"
         else:
             pass
 
     def mess_send(self):
+        """
+        站内消息的发送
+        """
         NEWS.objects.create(reader=self.user, info=self._info)
 
     def email_send(self):
+        """
+        邮件消息的发送
+        """
         if self.user.email:
             print("send email")
             try:
@@ -111,6 +123,9 @@ class NOTICE:
             pass
 
     def phone_send(self):
+        """
+        短信消息的发送
+        """
         if self.user.phone:
             print("send phone")
             req.rec_num = self.user.phone
@@ -122,6 +137,9 @@ class NOTICE:
             pass
 
     def send_notice(self):
+        """
+        消息通知的入口函数,实例化完成后 调用此函数就可以完成消息的发送
+        """
         self.get_info()
         if 1 in self._level:
             self.mess_send()

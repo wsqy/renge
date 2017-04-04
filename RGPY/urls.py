@@ -17,6 +17,9 @@ urlpatterns = [
     # 学生类
     url(r'^user_info/$', views.user_info, name='user_info'),
     url(r'^check_passwd/$', views.check_passwd, name='check_passwd'),
+    url(r'^renge_require/$', views.renge_require, name='renge_require'),
+    url(r'^attach_score/$', views.attach_score, name='attach_score'),
+
 
     # 超级管理员
     url(r'^createUser/college/$', views.create_college_manage, name='create_college_manage'),

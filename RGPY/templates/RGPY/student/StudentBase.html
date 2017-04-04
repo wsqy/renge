@@ -2,16 +2,16 @@
 {% block left %}
   <ul class="nav" id="side-menu">
     <li>
-        <a href="{% url 'RGPY:user_info'%}"><i class="fa fa-user fa-fw"></i> 学生:&nbsp;{{ request.user.ouruser.student.get_short_name }}<span class="fa arrow"></span></a>
+        <a href=""><i class="fa fa-user fa-fw"></i> 学生:&nbsp;{{ request.user.ouruser.student.get_short_name }}<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
+            <li>
+                <a href="{% url 'RGPY:user_info'%}">个人信息</a>
+            </li>
             <li>
                 <a href="{% url 'RGPY:news' %}">最新消息</a>
             </li>
             <li>
-                <a href="/">修改密码</a>
-            </li>
-            <li>
-                <a href="/">退出</a>
+                <a href="{% url 'RGPY:logout' %}">退出</a>
             </li>
         </ul>
     </li>
@@ -19,10 +19,10 @@
         <a href="#"><i class="fa fa-files-o fa-fw"></i> 人格培养 <span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li>
-                <a href="/">人格培养时长要求</a>
+                <a href="{% url 'RGPY:renge_require' %}">人格培养时长要求</a>
             </li>
             <li>
-                <a href="/">已获时长</a>
+                <a href="{% url 'RGPY:attach_score' %}">已获时长</a>
             </li>
         </ul>
     </li>

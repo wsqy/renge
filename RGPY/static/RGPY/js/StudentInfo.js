@@ -32,12 +32,11 @@ $(function(){
             success: function(result){
                 if(result == 0){
                     flag = false
-                    // $("#id_password").after("<font color=\"red\" size=\"2\">  Wrong</font>");
                     $(".alert_dismissible1").show();
                 }
                 else {
                     flag = true
-                    // $("#id_password").after("<font color=\"green\" size=\"2\">  Correct</font>");
+                    $(".alert_dismissible1").hide();
                 }
             },
         });

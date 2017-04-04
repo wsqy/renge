@@ -1,0 +1,43 @@
+{% extends 'RGPY/student/StudentBase.html' %}
+{% load staticfiles %}
+{% block custom_static %}
+    <script src="{% static 'RGPY/js/StudentInfo.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+   <div class="row">
+      <div class="col-xs-offset-3 col-xs-3"><h1>已获时长</h1></div>
+      <div class="col-xs-3"><h1>{{score}}</h1></div>
+   </div>
+   <div class="btn-group" role="group" aria-label="...">
+     <button type="button" class="btn btn-default">全部任务</button>
+     <button type="button" class="btn btn-default">上一学期</button>
+     <button type="button" class="btn btn-default">本学期</button>
+     <button type="button" class="btn btn-default">下载</button>
+   </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>学号</th>
+        <th>任务描述</th>
+        <th>任务完成时间</th>
+        <th>时长</th>
+    </tr>
+    {% for task in task_list %}
+        <tr id="{{ task.id }}">
+            <td>{{task.student}}</td>
+            <td>{{task.name}}</td>
+            <td>{{task.taskDate}}</td>
+            <td>{{task.score}}</td>
+        </tr>
+    {% empty %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>暂时您暂时还未完成过任务</strong>
+    </div>
+    {% endfor %}
+  </table>
+{% endblock %}

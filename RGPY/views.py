@@ -32,6 +32,8 @@ def register(request):
 
 
 def login(request):
+    print(request.method)
+    print(request.POST)
     if request.method == "POST" and request.POST:
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")
@@ -50,6 +52,7 @@ def login(request):
     return render(request, "RGPY/login.html", locals())
 
 
+@login_required(login_url='/login/')
 def logout(request):
     auth.logout(request)
     return redirect("/")
@@ -59,7 +62,6 @@ def logout(request):
 def index(request):
     if request.GET.get("mes"):
         message = request.GET.get("mes")
-    print(request.user.ouruser.level)
     try:
         if request.user.ouruser.level == '1':
             print("学生用户")
@@ -113,6 +115,19 @@ def check_passwd(request):
     else:
         result = 0
     return HttpResponse(result)
+
+
+@login_required(login_url='/login/')
+def renge_require(request):
+    return render(request, "RGPY/student/renge_yaoqiu.html", locals())
+
+
+@login_required(login_url='/login/')
+def attach_score(request):
+    _u = request.user.ouruser.student
+    score = _u.score
+    task_list = TaskList.objects.filter(student=_u)
+    return render(request, "RGPY/student/attach_score.html", locals())
 
 
 @login_required(login_url='/login/')
