@@ -42,6 +42,11 @@ $(function(){
             <td>{{banji.department}}</td>
             <td><button type="button" class="btn btn-primary btn-sm" id="banji_delete">删除</button></td>
         </tr>
+    {% empty %}
+       <div class="alert alert-warning alert-dismissible" role="alert">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <strong>您所在的系暂未创建任何班级</strong>
+       </div>
     {% endfor %}
   </table>
   </div>

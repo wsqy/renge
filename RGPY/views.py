@@ -65,7 +65,8 @@ def index(request):
     try:
         if request.user.ouruser.level == '1':
             print("学生用户")
-            return render(request, "RGPY/student/StudentIndex.html", locals())
+            return redirect('/news')
+            # return render(request, "RGPY/student/StudentIndex.html", locals())
         elif request.user.ouruser.level == '2':
             print("系管理员")
             return render(request, "RGPY/Department/index.html", locals())
@@ -257,7 +258,8 @@ def banji_list(request):
     # print(department)
     # print(type(department))
     # print("----")
-    result = get_list_or_404(Banji, department=department)
+    # result = get_list_or_404(Banji, department=department)
+    result = Banji.objects.filter(department=department)
     # print(result)
     # banji = result[0]
     # print(dir(banji))

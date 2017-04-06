@@ -32,6 +32,7 @@ $(function(){
             success: function(result){
                 if(result == 0){
                     flag = false
+                    // 密码出错 显示警告框 
                     $(".alert_dismissible1").show();
                 }
                 else {
