@@ -18,6 +18,7 @@ class MESSAGE:
         self.app_key = settings.MES_APPKEY
         self.MES_SECRET = settings.MES_SECRET
         self.AliDAYUGateway = settings.MES_URL
+        self.sign_method = "md5"
 
     def __ordered_data(self, data):
         """

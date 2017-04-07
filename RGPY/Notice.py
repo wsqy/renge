@@ -99,6 +99,12 @@ class NOTICE:
             self._info = '您完成的班级团体任务:%s 已经成功增加时长' % (self.desc)
             req.sms_param = {"task_name": self.desc}
             req.sms_template_code = "SMS_60085872"
+        elif self._infotype == 10:
+            # 注册提示   	SMS_60835034
+            self._mes_type = "欢迎使用人格培养管理平台"
+            self._info = '欢迎阳光学院人格培养管理平台系统,您的初始密码为 123456，请尽快修改'
+            req.sms_param = ""
+            req.sms_template_code = "SMS_60835034"
         else:
             pass
 

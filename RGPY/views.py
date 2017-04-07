@@ -236,6 +236,9 @@ def reset_password(request):
         u.set_password("123456")
         u.save()
         result = 1
+        # 消息通知流程
+        notice = NOTICE(user=u, type=7, level=[1, 2, 3])
+        notice.send_notice()
     else:
         result = 0
     return HttpResponse(result)
@@ -393,7 +396,7 @@ def student_list_upload(request):
             else:
                 is_banji_admin = False
             banji = row[5] or os.path.splitext(files)[1]
-            Student.objects.create_user(
+            u = Student.objects.create_user(
                 username=int(row[0]),
                 first_name=row[1],
                 email=row[2],
@@ -401,6 +404,10 @@ def student_list_upload(request):
                 is_banji_admin=is_banji_admin,
                 banji=Banji.objects.get(banji=banji),
             )
+
+            # 消息通知流程
+            notice = NOTICE(user=u, type=10, level=[1, 2, 3])
+            notice.send_notice()
         return redirect(request.MEAT.get("HTTP_REFERER", "/"))
     else:
         print(request.method)
